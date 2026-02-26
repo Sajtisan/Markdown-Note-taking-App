@@ -43,6 +43,19 @@ app.MapPost("/api/notes", async (Note incomingNote, AppDbContext db) =>
     return Results.Created($"/api/notes/{incomingNote.Id}", incomingNote);
 });
 
+app.MapPost("/api/grammar-check", async (GrammarRequest request) =>
+{
+    using var httpClient = new HttpClient();
+    var content = new FormUrlEncodedContent(new[]
+    {
+        new KeyValuePair<string, string>("text", request.Text),
+        new KeyValuePair<string, string>("language", "en-US") 
+    });
+    var response = await httpClient.PostAsync("https://api.languagetool.org/v2/check", content);
+    var jsonResult = await response.Content.ReadAsStringAsync();
+    return Results.Content(jsonResult, "application/json");
+});
+
 app.MapPut("/api/notes/{id}", async (int id, Note updatedNote, AppDbContext db) =>
 {
     var existingNote = await db.Notes.FindAsync(id);
@@ -63,3 +76,8 @@ app.MapDelete("/api/notes/{id}", async (int id, AppDbContext db) =>
 });
 
 app.Run();
+
+public class GrammarRequest
+{
+    public string Text { get; set; } = string.Empty;
+}
