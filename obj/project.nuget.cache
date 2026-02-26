@@ -1,10 +1,11 @@
 {
   "version": 2,
-  "dgSpecHash": "uZxujeT8uz0=",
+  "dgSpecHash": "mpP+PtMOF44=",
   "success": true,
   "projectFilePath": "C:\\Users\\david\\Documents\\SoloProjects\\Markdown-Note-taking-App\\Markdown-Note-taking-App.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\david\\.nuget\\packages\\humanizer.core\\2.14.1\\humanizer.core.2.14.1.nupkg.sha512",
+    "C:\\Users\\david\\.nuget\\packages\\markdig\\1.0.0\\markdig.1.0.0.nupkg.sha512",
     "C:\\Users\\david\\.nuget\\packages\\microsoft.aspnetcore.openapi\\10.0.2\\microsoft.aspnetcore.openapi.10.0.2.nupkg.sha512",
     "C:\\Users\\david\\.nuget\\packages\\microsoft.build.framework\\18.0.2\\microsoft.build.framework.18.0.2.nupkg.sha512",
     "C:\\Users\\david\\.nuget\\packages\\microsoft.codeanalysis.analyzers\\3.11.0\\microsoft.codeanalysis.analyzers.3.11.0.nupkg.sha512",

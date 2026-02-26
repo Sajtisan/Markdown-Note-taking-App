@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Markdown_Note_taking_App.Data;
 using Markdown_Note_taking_App.Models;
+using Markdig; //dotnet add package Markdig
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,6 +20,14 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.MapGet("/api/notes/{id}/html", async (int id, AppDbContext db) =>
+{
+    var note = await db.Notes.FindAsync(id);
+    if (note is null) return Results.NotFound();
+    var htmlContent = Markdown.ToHtml(note.Content);
+    return Results.Content(htmlContent, "text/html");
+});
 
 app.MapGet("/api/notes", async (AppDbContext db) =>
 {

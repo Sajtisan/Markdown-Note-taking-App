@@ -8,6 +8,7 @@
     ".NETCoreApp,Version=v10.0": {
       "Markdown-Note-taking-App/1.0.0": {
         "dependencies": {
+          "Markdig": "1.0.0",
           "Microsoft.AspNetCore.OpenApi": "10.0.2",
           "Microsoft.EntityFrameworkCore.Design": "10.0.3",
           "Npgsql.EntityFrameworkCore.PostgreSQL": "10.0.0"
@@ -21,6 +22,14 @@
           "lib/net6.0/Humanizer.dll": {
             "assemblyVersion": "2.14.0.0",
             "fileVersion": "2.14.1.48190"
+          }
+        }
+      },
+      "Markdig/1.0.0": {
+        "runtime": {
+          "lib/net10.0/Markdig.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
           }
         }
       },
@@ -510,6 +519,13 @@
       "sha512": "sha512-lQKvtaTDOXnoVJ20ibTuSIOf2i0uO0MPbDhd1jm238I+U/2ZnRENj0cktKZhtchBMtCUSRQ5v4xBCUbKNmyVMw==",
       "path": "humanizer.core/2.14.1",
       "hashPath": "humanizer.core.2.14.1.nupkg.sha512"
+    },
+    "Markdig/1.0.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-RtW04qHeVt5eGYvmndscZwnzCamYF4Opn+C31AQ8ApO+SUnkn093XFK6Xl6zXwNXiwE9NHvLqX5fXA9Ez0vbeA==",
+      "path": "markdig/1.0.0",
+      "hashPath": "markdig.1.0.0.nupkg.sha512"
     },
     "Microsoft.AspNetCore.OpenApi/10.0.2": {
       "type": "package",

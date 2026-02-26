@@ -121,3 +121,4 @@ C:\Users\david\Documents\SoloProjects\Markdown-Note-taking-App\bin\Debug\net10.0
 C:\Users\david\Documents\SoloProjects\Markdown-Note-taking-App\bin\Debug\net10.0\tr\Microsoft.CodeAnalysis.Workspaces.MSBuild.resources.dll
 C:\Users\david\Documents\SoloProjects\Markdown-Note-taking-App\bin\Debug\net10.0\zh-Hans\Microsoft.CodeAnalysis.Workspaces.MSBuild.resources.dll
 C:\Users\david\Documents\SoloProjects\Markdown-Note-taking-App\bin\Debug\net10.0\zh-Hant\Microsoft.CodeAnalysis.Workspaces.MSBuild.resources.dll
+C:\Users\david\Documents\SoloProjects\Markdown-Note-taking-App\bin\Debug\net10.0\Markdig.dll
