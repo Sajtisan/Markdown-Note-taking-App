@@ -10,10 +10,11 @@
 using System;
 using System.Reflection;
 
+[assembly: Microsoft.Extensions.Configuration.UserSecrets.UserSecretsIdAttribute("9ddf6e86-f767-46ff-ad3d-cb8dbfee9667")]
 [assembly: System.Reflection.AssemblyCompanyAttribute("Markdown-Note-taking-App")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+9999576ddf710e13c3591d493c2fd14d8ffefab3")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+9be38c8aa9caec7e0ea6f104e309c7293aec218b")]
 [assembly: System.Reflection.AssemblyProductAttribute("Markdown-Note-taking-App")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Markdown-Note-taking-App")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

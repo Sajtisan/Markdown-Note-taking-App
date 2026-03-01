@@ -1,10 +1,11 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using System.Security.Claims;
 using Markdown_Note_taking_App.Data;
 using Markdown_Note_taking_App.Models;
 using Markdig;
-using System.Security.Claims;
-using Microsoft.IdentityModel.Tokens;
-using System.Text;
 using System.IdentityModel.Tokens.Jwt; //dotnet add package Markdig
 
 var builder = WebApplication.CreateBuilder(args);
@@ -15,7 +16,29 @@ builder.Services.AddDbContext<AppDbContext>(options => options.UseNpgsql(builder
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 
+var jwtKey = builder.Configuration["Jwt:Key"];
+if (string.IsNullOrEmpty(jwtKey)) throw new Exception("JWT Key is missing!");
+
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true, // Checks if the token is expired
+            ValidateIssuerSigningKey = true, // Proves YOU minted it
+            ValidIssuer = builder.Configuration["Jwt:Issuer"],
+            ValidAudience = builder.Configuration["Jwt:Audience"],
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey))
+        };
+    });
+builder.Services.AddAuthorization();
+
 var app = builder.Build();
+
+app.UseAuthentication();
+app.UseAuthorization();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -45,7 +68,7 @@ app.MapPost("/api/register", async (RegisterRequest request, AppDbContext db) =>
 app.MapPost("/api/login", async (LoginRequest request, AppDbContext db, IConfiguration config) =>
 {
     var user = await db.Users.SingleOrDefaultAsync(u => u.Username == request.Username);
-    if (user ==  null)
+    if (user == null)
     {
         return Results.Unauthorized();
     }
@@ -83,19 +106,31 @@ app.MapGet("/api/notes/{id}/html", async (int id, AppDbContext db) =>
     return Results.Content(htmlContent, "text/html");
 });
 
+app.MapGet("/api/notes/my", async (AppDbContext db, ClaimsPrincipal user) =>
+{
+    var userIdClaim = user.FindFirst(ClaimTypes.NameIdentifier);
+    if (userIdClaim == null) return Results.Unauthorized();
+    int userId = int.Parse(userIdClaim.Value);
+    var myNotes = await db.Notes.Where(n => n.AuthorId == userId).ToListAsync();
+    return Results.Ok(myNotes);
+}).RequireAuthorization();
+
 app.MapGet("/api/notes", async (AppDbContext db) =>
 {
     var notes = await db.Notes.ToListAsync();
     return Results.Ok(notes);
 });
 
-app.MapPost("/api/notes", async (Note incomingNote, AppDbContext db) =>
+app.MapPost("/api/notes", async (Note newNote, AppDbContext db, ClaimsPrincipal user) =>
 {
-    incomingNote.CreatedAt = DateTime.UtcNow;
-    db.Notes.Add(incomingNote);
+    var userIdClaim = user.FindFirst(ClaimTypes.NameIdentifier);
+    if (userIdClaim == null) return Results.Unauthorized();
+    newNote.AuthorId = int.Parse(userIdClaim.Value);
+    newNote.CreatedAt = DateTime.UtcNow;
+    db.Notes.Add(newNote);
     await db.SaveChangesAsync();
-    return Results.Created($"/api/notes/{incomingNote.Id}", incomingNote);
-});
+    return Results.Created($"/api/notes/{newNote.Id}", newNote);
+}).RequireAuthorization();
 
 app.MapPost("/api/grammar-check", async (GrammarRequest request) =>
 {
