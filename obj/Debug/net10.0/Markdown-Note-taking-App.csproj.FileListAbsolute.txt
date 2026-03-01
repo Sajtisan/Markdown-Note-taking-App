@@ -122,3 +122,12 @@ C:\Users\david\Documents\SoloProjects\Markdown-Note-taking-App\bin\Debug\net10.0
 C:\Users\david\Documents\SoloProjects\Markdown-Note-taking-App\bin\Debug\net10.0\zh-Hans\Microsoft.CodeAnalysis.Workspaces.MSBuild.resources.dll
 C:\Users\david\Documents\SoloProjects\Markdown-Note-taking-App\bin\Debug\net10.0\zh-Hant\Microsoft.CodeAnalysis.Workspaces.MSBuild.resources.dll
 C:\Users\david\Documents\SoloProjects\Markdown-Note-taking-App\bin\Debug\net10.0\Markdig.dll
+C:\Users\david\Documents\SoloProjects\Markdown-Note-taking-App\bin\Debug\net10.0\BCrypt.Net-Next.dll
+C:\Users\david\Documents\SoloProjects\Markdown-Note-taking-App\bin\Debug\net10.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+C:\Users\david\Documents\SoloProjects\Markdown-Note-taking-App\bin\Debug\net10.0\Microsoft.IdentityModel.Abstractions.dll
+C:\Users\david\Documents\SoloProjects\Markdown-Note-taking-App\bin\Debug\net10.0\Microsoft.IdentityModel.JsonWebTokens.dll
+C:\Users\david\Documents\SoloProjects\Markdown-Note-taking-App\bin\Debug\net10.0\Microsoft.IdentityModel.Logging.dll
+C:\Users\david\Documents\SoloProjects\Markdown-Note-taking-App\bin\Debug\net10.0\Microsoft.IdentityModel.Protocols.dll
+C:\Users\david\Documents\SoloProjects\Markdown-Note-taking-App\bin\Debug\net10.0\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
+C:\Users\david\Documents\SoloProjects\Markdown-Note-taking-App\bin\Debug\net10.0\Microsoft.IdentityModel.Tokens.dll
+C:\Users\david\Documents\SoloProjects\Markdown-Note-taking-App\bin\Debug\net10.0\System.IdentityModel.Tokens.Jwt.dll
