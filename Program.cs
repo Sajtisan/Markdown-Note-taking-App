@@ -145,25 +145,30 @@ app.MapPost("/api/grammar-check", async (GrammarRequest request) =>
     return Results.Content(jsonResult, "application/json");
 });
 
-app.MapPut("/api/notes/{id}", async (int id, Note updatedNote, AppDbContext db) =>
+app.MapPut("/api/notes/{id}", async (int id, Note updatedNote, AppDbContext db, ClaimsPrincipal user) =>
 {
-    var existingNote = await db.Notes.FindAsync(id);
-    if (existingNote is null) return Results.NotFound();
-    existingNote.Title = updatedNote.Title;
-    existingNote.Content = updatedNote.Content;
+    var userIdClaim = user.FindFirst(ClaimTypes.NameIdentifier);
+    if (userIdClaim == null) return Results.Unauthorized();
+    int userId = int.Parse(userIdClaim.Value);
+    var note = await db.Notes.FirstOrDefaultAsync(n => n.Id == id && n.AuthorId == userId);
+    if (note == null) return Results.NotFound();
+    note.Title = updatedNote.Title;
+    note.Content = updatedNote.Content;
     await db.SaveChangesAsync();
     return Results.NoContent();
-});
+}).RequireAuthorization();
 
-app.MapDelete("/api/notes/{id}", async (int id, AppDbContext db) =>
+app.MapDelete("/api/notes/{id}", async (int id, AppDbContext db, ClaimsPrincipal user) =>
 {
-    var note = await db.Notes.FindAsync(id);
-    if (note is null) return Results.NotFound();
+    var userIdClaim = user.FindFirst(ClaimTypes.NameIdentifier);
+    if (userIdClaim == null) return Results.Unauthorized();
+    int userId = int.Parse(userIdClaim.Value);
+    var note = await db.Notes.FirstOrDefaultAsync(n => n.Id == id && n.AuthorId == userId);
+    if (note == null) return Results.NotFound();
     db.Notes.Remove(note);
     await db.SaveChangesAsync();
-    return Results.Ok();
-});
-
+    return Results.NoContent();
+}).RequireAuthorization();
 app.Run();
 
 public class GrammarRequest
