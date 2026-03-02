@@ -1,0 +1,94 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:data="using:MarkdownNotesClient.Data"
+             xmlns:md="https://github.com/whistyun/Markdown.Avalonia"
+             x:Class="MarkdownNotesClient.Views.NotesView">
+
+    <Grid ColumnDefinitions="250, *">
+
+        <DockPanel Grid.Column="0" Background="#2d2d30">
+            <StackPanel DockPanel.Dock="Top" Margin="10">
+                <Button x:Name="CreateNoteButton"
+                        Content="+ New Note"
+                        Click="OnCreateNoteClick"
+                        HorizontalAlignment="Stretch"
+                        HorizontalContentAlignment="Center"
+                        Margin="0,0,0,5"/>
+
+                <Button x:Name="SyncButton"
+                        Content="🔄 Sync to Cloud"
+                        Click="OnSyncClick"
+                        HorizontalAlignment="Stretch"
+                        HorizontalContentAlignment="Center"
+                        Background="#007ACC"
+                        Foreground="White"
+                        Margin="0,0,0,5"/>
+
+                <Button x:Name="LogoutButton"
+                        Content="Log Out"
+                        Click="OnLogoutClick"
+                        HorizontalAlignment="Stretch"
+                        HorizontalContentAlignment="Center"
+                        Background="#d32f2f"
+                        Foreground="White"/>
+            </StackPanel>
+
+            <ListBox x:Name="NotesList"
+                     Margin="10"
+                     Background="Transparent"
+                     Foreground="White"
+                     SelectionChanged="OnNoteSelected">
+                <ListBox.ItemTemplate>
+                    <DataTemplate x:DataType="data:LocalNote">
+                        <Grid ColumnDefinitions="*, Auto">
+                            <TextBlock Grid.Column="0" Text="{Binding Title}" FontSize="16" Padding="5" VerticalAlignment="Center"/>
+                            <Button Grid.Column="1" Content="⋮" Background="Transparent" FontSize="18" FontWeight="Bold" Padding="10,0" VerticalAlignment="Center">
+                                <Button.Flyout>
+                                    <MenuFlyout>
+                                        <MenuItem Header="Delete" Click="OnDeleteNoteClick" Foreground="#f44336"/>
+                                </MenuFlyout>
+                                </Button.Flyout>
+                            </Button>
+                        </Grid>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </DockPanel>
+
+        <DockPanel Grid.Column="1" Margin="20">
+            <DockPanel DockPanel.Dock="Top" Margin="0,0,0,10">
+                <Button x:Name="SaveNoteButton"
+                        Content="Save"
+                        Click="OnSaveNoteClick"
+                        DockPanel.Dock="Right"
+                        Background="#4CAF50"
+                        Foreground="White"
+                        VerticalAlignment="Center"
+                        Margin="10,0,0,0"/>
+
+                <TextBox x:Name="NoteTitleField"
+                         Watermark="Note Title..."
+                         FontSize="24"
+                         FontWeight="Bold"
+                         BorderThickness="0"/>
+            </DockPanel>
+
+            <Grid ColumnDefinitions="*, *">
+
+                <TextBox x:Name="NoteContentField"
+                         Grid.Column="0"
+                         AcceptsReturn="True"
+                         TextWrapping="Wrap"
+                         Watermark="Start typing your markdown here..."
+                         BorderThickness="0"
+                         Margin="0,0,10,0"/>
+
+                <Border Grid.Column="1" Background="#1e1e1e" CornerRadius="5" Padding="15">
+                    <md:MarkdownScrollViewer Markdown="{Binding Text, ElementName=NoteContentField}"/>
+                </Border>
+
+            </Grid>
+        </DockPanel>
+
+    </Grid>
+</UserControl>
