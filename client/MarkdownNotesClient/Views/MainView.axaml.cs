@@ -1,6 +1,7 @@
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.VisualTree;
+using Avalonia.Input;
 using MarkdownNotesClient.Services;
 using MarkdownNotesClient.Data;
 
@@ -21,14 +22,24 @@ public partial class MainView : UserControl
         if (RegOrLogButton.Content?.ToString() == "Register")
         {
             RegOrLogButton.Content = "Back to Login";
-            LoginPanel.IsVisible = false;
-            RegisterPanel.IsVisible = true;
+
+            // Fade out Login, Fade in Register
+            LoginPanel.Opacity = 0;
+            LoginPanel.IsHitTestVisible = false;
+
+            RegisterPanel.Opacity = 1;
+            RegisterPanel.IsHitTestVisible = true;
         }
         else
         {
             RegOrLogButton.Content = "Register";
-            LoginPanel.IsVisible = true;
-            RegisterPanel.IsVisible = false;
+
+            // Fade out Register, Fade in Login
+            RegisterPanel.Opacity = 0;
+            RegisterPanel.IsHitTestVisible = false;
+
+            LoginPanel.Opacity = 1;
+            LoginPanel.IsHitTestVisible = true;
         }
         LoginErrorText.IsVisible = false;
         RegErrorText.IsVisible = false;
@@ -124,6 +135,71 @@ public partial class MainView : UserControl
                 // Force Avalonia to Light Mode UI (This will turn your text and buttons dark!)
                 Avalonia.Application.Current!.RequestedThemeVariant = Avalonia.Styling.ThemeVariant.Light;
                 break;
+        }
+    }
+    private bool _isSettingsOpen = false;
+
+    private void OnSettingsToggleClick(object sender, RoutedEventArgs e)
+    {
+        _isSettingsOpen = !_isSettingsOpen;
+        UpdateSettingsPanelState();
+    }
+
+    private void OnSettingsPointerExited(object sender, PointerEventArgs e)
+    {
+        if (_isSettingsOpen)
+        {
+            _isSettingsOpen = false;
+            UpdateSettingsPanelState();
+        }
+    }
+
+    private void UpdateSettingsPanelState()
+    {
+        if (_isSettingsOpen)
+        {
+            SettingsPanelContainer.Classes.Remove("closed");
+            SettingsPanelContainer.Classes.Add("open");
+
+            SettingsArrow.Classes.Remove("closed");
+            SettingsArrow.Classes.Add("open");
+        }
+        else
+        {
+            SettingsPanelContainer.Classes.Remove("open");
+            SettingsPanelContainer.Classes.Add("closed");
+
+            SettingsArrow.Classes.Remove("open");
+            SettingsArrow.Classes.Add("closed");
+        }
+    }
+    private bool _isAppearanceOpen = false;
+
+    private void OnAppearanceToggleClick(object sender, RoutedEventArgs e)
+    {
+        _isAppearanceOpen = !_isAppearanceOpen;
+
+        if (_isAppearanceOpen)
+        {
+            AppearanceArrow.Classes.Remove("closed");
+            AppearanceArrow.Classes.Add("open");
+
+            AppearanceText.Classes.Remove("closed");
+            AppearanceText.Classes.Add("open");
+
+            AppearanceContent.Classes.Remove("closed");
+            AppearanceContent.Classes.Add("open");
+        }
+        else
+        {
+            AppearanceArrow.Classes.Remove("open");
+            AppearanceArrow.Classes.Add("closed");
+
+            AppearanceText.Classes.Remove("open");
+            AppearanceText.Classes.Add("closed");
+
+            AppearanceContent.Classes.Remove("open");
+            AppearanceContent.Classes.Add("closed");
         }
     }
 }

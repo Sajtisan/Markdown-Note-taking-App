@@ -2,101 +2,289 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:controls="using:MarkdownNotesClient.Controls"
              x:Class="MarkdownNotesClient.Views.MainView">
-    
+
     <Panel>
         <controls:BackgroundManager x:Name="DynamicCanvas" />
-
-        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="20" Spacing="10">
-            <ToggleButton x:Name="FogToggle" Content="🌫️ FX: ON" IsChecked="True" Click="OnFogToggleClick" 
-                          Padding="15,8" Background="#40000000" Foreground="White" CornerRadius="8"/>
-            <Button x:Name="ThemeCycleButton" Content="🎨 Theme: Dark" Click="OnThemeCycleClick" 
-                    Padding="15,8" Background="#40000000" Foreground="White" CornerRadius="8"/>
-        </StackPanel>
-
         <Border Width="380" VerticalAlignment="Center" HorizontalAlignment="Center"
-                Background="#33000000" 
-                BorderBrush="#26FFFFFF" 
-                BorderThickness="1"
-                CornerRadius="20" 
-                Padding="40">
-            
+                Background="#33000000" BorderBrush="#26FFFFFF" BorderThickness="1"
+                CornerRadius="20" Padding="40">
+
+            <Border.Styles>
+                <Style Selector="Border">
+                    <Style.Animations>
+                        <Animation Duration="0:0:0.8" Easing="CubicEaseOut">
+                            <KeyFrame Cue="0%">
+                                <Setter Property="Opacity" Value="0.0"/>
+                                <Setter Property="TranslateTransform.Y" Value="30"/>
+                            </KeyFrame>
+                            <KeyFrame Cue="100%">
+                                <Setter Property="Opacity" Value="1.0"/>
+                                <Setter Property="TranslateTransform.Y" Value="0"/>
+                            </KeyFrame>
+                        </Animation>
+                    </Style.Animations>
+                </Style>
+            </Border.Styles>
+
             <Border.BoxShadow>
                 <BoxShadows>0 15 40 0 #40000000</BoxShadows>
             </Border.BoxShadow>
 
-            <StackPanel Spacing="30">
-                
-                <Panel x:Name="LoginPanel" IsVisible="True">
-                    <StackPanel Spacing="20">
-                        <TextBlock Text="Welcome" FontSize="28" FontWeight="Normal" HorizontalAlignment="Center" Foreground="White" Margin="0,0,0,10"/>
-                        
-                        <TextBox x:Name="LoginUsernameField" Watermark="Username" 
-                                 FontSize="16" Padding="15,12"
-                                 Background="#1AFFFFFF" Foreground="White" BorderBrush="#33FFFFFF" BorderThickness="1" CornerRadius="10"/>
+            <Grid>
+                <StackPanel Spacing="30">
 
-                        <TextBox x:Name="LoginPasswordField" Watermark="Password" PasswordChar="•" 
-                                 FontSize="16" Padding="15,12"
-                                 Background="#1AFFFFFF" Foreground="White" BorderBrush="#33FFFFFF" BorderThickness="1" CornerRadius="10"/>
-
-                        <Button Content="Login" FontSize="16" FontWeight="Bold" 
-                                HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"
-                                Background="#33FFFFFF" Foreground="White" BorderBrush="#4DFFFFFF" BorderThickness="1" CornerRadius="10" Padding="12" 
-                                Click="OnLoginClick" Margin="0,10,0,0" Cursor="Hand">
-                            <Button.Transitions>
+                    <Grid>
+                        <Panel x:Name="LoginPanel" Opacity="1" IsHitTestVisible="True">
+                            <Panel.Transitions>
                                 <Transitions>
-                                    <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.1"/>
+                                    <DoubleTransition Property="Opacity" Duration="0:0:0.3" Easing="CubicEaseInOut"/>
                                 </Transitions>
-                            </Button.Transitions>
-                            <Button.Styles>
-                                <Style Selector="Button:pointerover">
-                                    <Setter Property="RenderTransform" Value="scale(1.02)"/>
-                                    <Setter Property="Background" Value="#4DFFFFFF"/> 
-                                </Style>
-                            </Button.Styles>
-                        </Button>
-                        
-                        <TextBlock x:Name="LoginErrorText" Foreground="#FF5555" FontSize="14" HorizontalAlignment="Center" IsVisible="False" TextWrapping="Wrap"/>
-                    </StackPanel>
-                </Panel>
+                            </Panel.Transitions>
 
-                <Panel x:Name="RegisterPanel" IsVisible="False">
-                    <StackPanel Spacing="20">
-                        <TextBlock Text="Join" FontSize="28" FontWeight="Normal" HorizontalAlignment="Center" Foreground="White" Margin="0,0,0,10"/>
-                        
-                        <TextBox x:Name="RegUsernameField" Watermark="Username" 
-                                 FontSize="16" Padding="15,12"
-                                 Background="#1AFFFFFF" Foreground="White" BorderBrush="#33FFFFFF" BorderThickness="1" CornerRadius="10"/>
+                            <StackPanel Spacing="20">
+                                <TextBlock Text="Welcome" FontSize="28" FontWeight="Normal" HorizontalAlignment="Center" Foreground="White" Margin="0,0,0,10"/>
 
-                        <TextBox x:Name="RegPasswordField" Watermark="Password" PasswordChar="•" 
-                                 FontSize="16" Padding="15,12"
-                                 Background="#1AFFFFFF" Foreground="White" BorderBrush="#33FFFFFF" BorderThickness="1" CornerRadius="10"/>
+                                <TextBox x:Name="LoginUsernameField" Watermark="Username" FontSize="16" Padding="15,12" Background="#1AFFFFFF" Foreground="White" BorderBrush="#33FFFFFF" BorderThickness="1" CornerRadius="10"/>
+                                <TextBox x:Name="LoginPasswordField" Watermark="Password" PasswordChar="•" FontSize="16" Padding="15,12" Background="#1AFFFFFF" Foreground="White" BorderBrush="#33FFFFFF" BorderThickness="1" CornerRadius="10"/>
 
-                        <Button Content="Register" FontSize="16" FontWeight="Bold" 
-                                HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"
-                                Background="#33FFFFFF" Foreground="White" BorderBrush="#4DFFFFFF" BorderThickness="1" CornerRadius="10" Padding="12" 
-                                Click="OnRegisterClick" Margin="0,10,0,0" Cursor="Hand">
-                            <Button.Transitions>
+                                <Button Content="Login" FontSize="16" FontWeight="Bold" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"
+                                        Background="#33FFFFFF" Foreground="White" BorderBrush="#4DFFFFFF" BorderThickness="1" CornerRadius="10" Padding="12"
+                                        Click="OnLoginClick" Margin="0,10,0,0" Cursor="Hand">
+                                    <Button.Transitions>
+                                        <Transitions><TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.1"/></Transitions>
+                                    </Button.Transitions>
+                                    <Button.Styles>
+                                        <Style Selector="Button:pointerover">
+                                            <Setter Property="RenderTransform" Value="scale(1.02)"/>
+                                            <Setter Property="Background" Value="#4DFFFFFF"/>
+                                        </Style>
+                                    </Button.Styles>
+                                </Button>
+
+                                <TextBlock x:Name="LoginErrorText" Foreground="#FF5555" FontSize="14" HorizontalAlignment="Center" IsVisible="False" TextWrapping="Wrap"/>
+                            </StackPanel>
+                        </Panel>
+
+                        <Panel x:Name="RegisterPanel" Opacity="0" IsHitTestVisible="False">
+                            <Panel.Transitions>
                                 <Transitions>
-                                    <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.1"/>
+                                    <DoubleTransition Property="Opacity" Duration="0:0:0.3" Easing="CubicEaseInOut"/>
                                 </Transitions>
-                            </Button.Transitions>
-                            <Button.Styles>
-                                <Style Selector="Button:pointerover">
-                                    <Setter Property="RenderTransform" Value="scale(1.02)"/>
-                                    <Setter Property="Background" Value="#4DFFFFFF"/>
-                                </Style>
-                            </Button.Styles>
-                        </Button>
-                        
-                        <TextBlock x:Name="RegErrorText" Foreground="#FF5555" FontSize="14" HorizontalAlignment="Center" IsVisible="False" TextWrapping="Wrap"/>
-                    </StackPanel>
-                </Panel>
+                            </Panel.Transitions>
 
-                <Button x:Name="RegOrLogButton" Content="Register" 
-                        HorizontalAlignment="Center" Background="Transparent" 
-                        Foreground="#99FFFFFF" FontSize="14" Click="RegisterOrLoginClick" Cursor="Hand"/>
+                            <StackPanel Spacing="20">
+                                <TextBlock Text="Join" FontSize="28" FontWeight="Normal" HorizontalAlignment="Center" Foreground="White" Margin="0,0,0,10"/>
 
-            </StackPanel>
+                                <TextBox x:Name="RegUsernameField" Watermark="Username" FontSize="16" Padding="15,12" Background="#1AFFFFFF" Foreground="White" BorderBrush="#33FFFFFF" BorderThickness="1" CornerRadius="10"/>
+                                <TextBox x:Name="RegPasswordField" Watermark="Password" PasswordChar="•" FontSize="16" Padding="15,12" Background="#1AFFFFFF" Foreground="White" BorderBrush="#33FFFFFF" BorderThickness="1" CornerRadius="10"/>
+
+                                <Button Content="Register" FontSize="16" FontWeight="Bold" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"
+                                        Background="#33FFFFFF" Foreground="White" BorderBrush="#4DFFFFFF" BorderThickness="1" CornerRadius="10" Padding="12"
+                                        Click="OnRegisterClick" Margin="0,10,0,0" Cursor="Hand">
+                                    <Button.Transitions>
+                                        <Transitions><TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.1"/></Transitions>
+                                    </Button.Transitions>
+                                    <Button.Styles>
+                                        <Style Selector="Button:pointerover">
+                                            <Setter Property="RenderTransform" Value="scale(1.02)"/>
+                                            <Setter Property="Background" Value="#4DFFFFFF"/>
+                                        </Style>
+                                    </Button.Styles>
+                                </Button>
+
+                                <TextBlock x:Name="RegErrorText" Foreground="#FF5555" FontSize="14" HorizontalAlignment="Center" IsVisible="False" TextWrapping="Wrap"/>
+                            </StackPanel>
+                        </Panel>
+                    </Grid>
+
+                    <Button x:Name="RegOrLogButton" Content="Register" HorizontalAlignment="Center" Background="Transparent" Foreground="#99FFFFFF" FontSize="14" Click="RegisterOrLoginClick" Cursor="Hand"/>
+
+                </StackPanel>
+            </Grid>
         </Border>
+        <Grid HorizontalAlignment="Left" VerticalAlignment="Center" ClipToBounds="False">
+
+            <Grid x:Name="SettingsPanelContainer" Classes="closed" PointerExited="OnSettingsPointerExited">
+                <Grid.Styles>
+                    <Style Selector="Grid.closed">
+                        <Setter Property="RenderTransform" Value="translateX(-250px)"/>
+                    </Style>
+                    <Style Selector="Grid.open">
+                        <Setter Property="RenderTransform" Value="translateX(0px)"/>
+                    </Style>
+                    <Style Selector="Grid">
+                        <Setter Property="Transitions">
+                            <Transitions>
+                                <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.4" Easing="CubicEaseOut"/>
+                            </Transitions>
+                        </Setter>
+                    </Style>
+                </Grid.Styles>
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="250"/> <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <Border Grid.Column="0" Width="250" Height="400"
+                        Background="#33000000"
+                        BorderBrush="#26FFFFFF"
+                        BorderThickness="0,1,1,1"
+                        CornerRadius="0,20,20,0"
+                        Padding="25">
+
+                    <Border.BoxShadow>
+                        <BoxShadows>10 10 30 0 #40000000</BoxShadows>
+                    </Border.BoxShadow>
+
+                    <StackPanel Spacing="20">
+                        <TextBlock Text="Settings" FontSize="24" FontWeight="Normal" Foreground="White" Margin="0,0,0,10"/>
+
+                        <StackPanel Spacing="15">
+
+                            <Button x:Name="AppearanceBtn" Background="Transparent" BorderThickness="0" Padding="0" Click="OnAppearanceToggleClick" Cursor="Hand" HorizontalAlignment="Left">
+                                <StackPanel Orientation="Horizontal" Spacing="8">
+
+                                    <TextBlock x:Name="AppearanceArrow" Classes="closed" Text="&gt;" FontSize="12" FontWeight="Bold" Foreground="#00C853">
+                                        <TextBlock.Styles>
+                                            <Style Selector="TextBlock.closed">
+                                                <Setter Property="Opacity" Value="0"/>
+                                                <Setter Property="RenderTransform" Value="translateX(10px)"/>
+                                            </Style>
+                                            <Style Selector="TextBlock.open">
+                                                <Setter Property="Opacity" Value="1"/>
+                                                <Setter Property="RenderTransform" Value="translateX(0px)"/>
+                                            </Style>
+                                        </TextBlock.Styles>
+                                        <TextBlock.Transitions>
+                                            <Transitions>
+                                                <DoubleTransition Property="Opacity" Duration="0:0:0.3" Easing="CubicEaseOut"/>
+                                                <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.3" Easing="CubicEaseOut"/>
+                                            </Transitions>
+                                        </TextBlock.Transitions>
+                                    </TextBlock>
+
+                                    <TextBlock x:Name="AppearanceText" Classes="closed" Text="APPEARANCE" Margin="0,0,20,0" FontSize="12" FontWeight="Bold" Foreground="#80FFFFFF" LetterSpacing="1">
+                                        <TextBlock.Styles>
+                                            <Style Selector="TextBlock.closed">
+                                                <Setter Property="RenderTransform" Value="translateX(15px)"/>
+                                            </Style>
+                                            <Style Selector="TextBlock.open">
+                                                <Setter Property="RenderTransform" Value="translateX(0px)"/>
+                                            </Style>
+                                            <Style Selector="TextBlock:pointerover">
+                                                <Setter Property="Foreground" Value="White"/>
+                                            </Style>
+                                        </TextBlock.Styles>
+                                        <TextBlock.Transitions>
+                                            <Transitions>
+                                                <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.3" Easing="CubicEaseOut"/>
+                                            </Transitions>
+                                        </TextBlock.Transitions>
+                                    </TextBlock>
+                                </StackPanel>
+                            </Button>
+
+                            <StackPanel x:Name="AppearanceContent" Classes="closed" Spacing="15">
+                                <StackPanel.Styles>
+                                    <Style Selector="StackPanel.closed">
+                                        <Setter Property="Opacity" Value="0"/>
+                                        <Setter Property="IsHitTestVisible" Value="False"/>
+                                        <Setter Property="RenderTransform" Value="translateX(40px)"/>
+                                        <Setter Property="Height" Value="0"/>
+                                        <Setter Property="Margin" Value="0"/>
+                                    </Style>
+                                    <Style Selector="StackPanel.open">
+                                        <Setter Property="Opacity" Value="1"/>
+                                        <Setter Property="IsHitTestVisible" Value="True"/>
+                                        <Setter Property="RenderTransform" Value="translateX(0px)"/>
+                                        <Setter Property="Height" Value="60"/>
+                                        <Setter Property="Margin" Value="15,0,0,0"/>
+                                    </Style>
+
+                                    <Style Selector="Button.SubBtn, ToggleButton.SubBtn">
+                                        <Setter Property="Background" Value="Transparent"/>
+                                        <Setter Property="BorderThickness" Value="0"/>
+                                        <Setter Property="Foreground" Value="#80FFFFFF"/>
+                                        <Setter Property="FontSize" Value="12"/>
+                                        <Setter Property="FontWeight" Value="Bold"/>
+                                        <Setter Property="TextBlock.LetterSpacing" Value="1"/>
+                                        <Setter Property="Padding" Value="0"/>
+                                        <Setter Property="HorizontalAlignment" Value="Left"/>
+                                        <Setter Property="Cursor" Value="Hand"/>
+                                        <Setter Property="Transitions">
+                                            <Transitions>
+                                                <BrushTransition Property="Foreground" Duration="0:0:0.2"/>
+                                                <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.2"/>
+                                            </Transitions>
+                                        </Setter>
+                                    </Style>
+
+                                    <Style Selector="Button.SubBtn:pointerover, ToggleButton.SubBtn:pointerover">
+                                        <Setter Property="Background" Value="Transparent"/>
+                                        <Setter Property="Foreground" Value="White"/>
+                                        <Setter Property="RenderTransform" Value="translateX(5px)"/>
+                                    </Style>
+                                </StackPanel.Styles>
+
+                                <StackPanel.Transitions>
+                                    <Transitions>
+                                        <DoubleTransition Property="Opacity" Duration="0:0:0.3" Easing="CubicEaseOut"/>
+                                        <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.3" Easing="CubicEaseOut"/>
+                                        <DoubleTransition Property="Height" Duration="0:0:0.3" Easing="CubicEaseOut"/>
+                                    </Transitions>
+                                </StackPanel.Transitions>
+
+                                <ToggleButton x:Name="FogToggle" Classes="SubBtn" Content="🌫️ FX: ON" IsChecked="True" Click="OnFogToggleClick"/>
+                                <Button x:Name="ThemeCycleButton" Classes="SubBtn" Content="🎨 Theme: Dark" Click="OnThemeCycleClick"/>
+                            </StackPanel>
+                        </StackPanel>
+
+                    </StackPanel>
+                </Border>
+
+                <Button Grid.Column="1" x:Name="SettingsTriggerBtn"
+                        Width="24" Height="70"
+                        CornerRadius="0, 35, 35, 0"
+                        Background="#33000000"
+                        BorderBrush="#26FFFFFF"
+                        BorderThickness="0,1,1,1"
+                        Margin="-15,0,0,0"
+                        ZIndex="1"
+                        Click="OnSettingsToggleClick"
+                        Cursor="Hand"
+                        VerticalAlignment="Center">
+                    <Button.Transitions>
+                        <Transitions>
+                            <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.2" Easing="CubicEaseOut"/>
+                            <BrushTransition Property="Background" Duration="0:0:0.2"/>
+                        </Transitions>
+                    </Button.Transitions>
+                    <Button.Styles>
+                        <Style Selector="Button:pointerover">
+                            <Setter Property="RenderTransform" Value="translateX(10px)"/>
+                            <Setter Property="Background" Value="#4DFFFFFF"/>
+                        </Style>
+                    </Button.Styles>
+
+                    <Path x:Name="SettingsArrow" Classes="closed" Data="M 0 0 L 6 6 L 0 12"
+                          Stroke="White" StrokeThickness="2"
+                          StrokeLineCap="Round" StrokeJoin="Round"
+                          HorizontalAlignment="Center" VerticalAlignment="Center"
+                          RenderTransformOrigin="50%,50%">
+                        <Path.Styles>
+                            <Style Selector="Path.closed"><Setter Property="RenderTransform" Value="scaleX(1)"/></Style>
+                            <Style Selector="Path.open"><Setter Property="RenderTransform" Value="scaleX(-1)"/></Style>
+                            <Style Selector="Path">
+                                <Setter Property="Transitions">
+                                    <Transitions>
+                                        <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.3" Easing="CubicEaseInOut"/>
+                                    </Transitions>
+                                </Setter>
+                            </Style>
+                        </Path.Styles>
+                    </Path>
+                </Button>
+            </Grid>
+        </Grid>
     </Panel>
 </UserControl>
