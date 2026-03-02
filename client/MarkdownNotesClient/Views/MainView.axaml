@@ -1,25 +1,77 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:controls="using:MarkdownNotesClient.Controls"
              x:Class="MarkdownNotesClient.Views.MainView">
+    
+    <Panel>
+        <controls:BackgroundManager x:Name="DynamicCanvas" />
 
-    <StackPanel Margin="20" Spacing="10" Width="300" HorizontalAlignment="Center" VerticalAlignment="Center">
-        <TextBlock Text="Welcome Back" FontSize="24" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,0,0,20"/>
-        
-        <TextBlock Text="Username"/>
-        <TextBox x:Name="UsernameField" Watermark="Enter username..."/>
-        
-        <TextBlock Text="Password"/>
-        <TextBox x:Name="PasswordField" Watermark="Enter password..." PasswordChar="*"/>
-        
-        <Button Content="Login" 
-                HorizontalAlignment="Stretch" 
-                HorizontalContentAlignment="Center"
-                Click="OnLoginClick"
-                Background="#2196F3" 
-                Foreground="White"
-                Margin="0,10,0,0"/>
-                
-        <TextBlock x:Name="ErrorText" Foreground="Red" HorizontalAlignment="Center" IsVisible="False"/>
-    </StackPanel>
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10" Spacing="10">
+            <ToggleButton x:Name="FogToggle" 
+                          Content="🌫️ FX: ON" 
+                          IsChecked="True" 
+                          Click="OnFogToggleClick" 
+                          Background="#1E1E1E" 
+                          Foreground="White" 
+                          CornerRadius="5"/>
+            
+            <Button x:Name="ThemeCycleButton" 
+                    Content="🎨 Theme: Dark" 
+                    Click="OnThemeCycleClick" 
+                    Background="#1E1E1E" 
+                    Foreground="White" 
+                    CornerRadius="5"/>
+        </StackPanel>
 
+        <Button x:Name="RegOrLogButton" Content="Register" HorizontalAlignment="Right" VerticalAlignment="Top" Click="RegisterOrLoginClick" Margin="10" Background="#1E1E1E" Foreground="White" CornerRadius="5"/> 
+
+        <StackPanel Margin="20" Spacing="10" Width="300" HorizontalAlignment="Center" VerticalAlignment="Center">
+
+            <Panel x:Name="LoginPanel" IsVisible="True">
+                <StackPanel>
+                    <TextBlock Text="Login" FontSize="24" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,0,0,20"/>
+
+                    <TextBlock Text="Username"/>
+                    <TextBox x:Name="LoginUsernameField" Watermark="Enter username..."/>
+
+                    <TextBlock Text="Password"/>
+                    <TextBox x:Name="LoginPasswordField" Watermark="Enter password..." PasswordChar="*"/>
+
+                    <Button Content="Login"
+                            HorizontalAlignment="Stretch"
+                            HorizontalContentAlignment="Center"
+                            Click="OnLoginClick"
+                            Background="#2196F3"
+                            Foreground="White"
+                            Margin="0,10,0,0"/>
+
+                    <TextBlock x:Name="LoginErrorText" Foreground="Red" HorizontalAlignment="Center" IsVisible="False"/>
+                </StackPanel>
+            </Panel>
+
+            <Panel x:Name="RegisterPanel" IsVisible="False">
+                <StackPanel>
+                    <TextBlock Text="Register" FontSize="24" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,0,0,20"/>
+
+                    <TextBlock Text="Username"/>
+                    <TextBox x:Name="RegUsernameField" Watermark="Enter username..."/>
+
+                    <TextBlock Text="Password"/>
+                    <TextBox x:Name="RegPasswordField" Watermark="Enter password..." PasswordChar="*"/>
+
+                    <Button Content="Register"
+                            HorizontalAlignment="Stretch"
+                            HorizontalContentAlignment="Center"
+                            Click="OnRegisterClick"
+                            Background="#4CAF50"
+                            Foreground="White"
+                            Margin="0,10,0,0"/>
+
+                    <TextBlock x:Name="RegErrorText" Foreground="Red" HorizontalAlignment="Center" IsVisible="False"/>
+                </StackPanel>
+            </Panel>
+
+        </StackPanel>
+
+    </Panel>
 </UserControl>

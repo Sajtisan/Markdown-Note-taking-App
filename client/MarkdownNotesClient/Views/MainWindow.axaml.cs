@@ -1,11 +1,12 @@
 using Avalonia.Controls;
+using MarkdownNotesClient.Controls;
 using MarkdownNotesClient.Data;
 using MarkdownNotesClient.Services;
 using System.Linq;
 
 namespace MarkdownNotesClient.Views;
 
-public partial class MainWindow : Window
+public partial class MainWindow : GlassWindow
 {
     public MainWindow()
     {

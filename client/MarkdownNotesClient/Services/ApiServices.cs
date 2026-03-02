@@ -7,6 +7,7 @@ using System.Net.Http.Headers;
 using MarkdownNotesClient.Data;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
+using Microsoft.VisualBasic;
 
 namespace MarkdownNotesClient.Services;
 
@@ -57,6 +58,28 @@ public class ApiService
         catch (Exception ex)
         {
             // 3. Return the exact crash message!
+            return $"Network Crash: {ex.Message}";
+        }
+    }
+    public async Task<string> RegisterAsync(string username, string password)
+    {
+        try
+        {
+            // 1. Send the data to your new backend route
+            var response = await _httpClient.PostAsJsonAsync("http://localhost:5080/api/register", new { username, password });
+
+            if (response.IsSuccessStatusCode)
+            {
+                return "SUCCESS";
+            }
+
+            // 2. If it failed (e.g., username taken), grab the error message the server sent
+            var errorText = await response.Content.ReadAsStringAsync();
+            // Remove quotes from the JSON string response if there are any
+            return $"Registration Failed: {errorText.Trim('"')}";
+        }
+        catch (Exception ex)
+        {
             return $"Network Crash: {ex.Message}";
         }
     }
