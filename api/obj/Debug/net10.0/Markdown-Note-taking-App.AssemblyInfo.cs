@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Markdown-Note-taking-App")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+7c344913b23d35e68fe61b0db20f5326697b403f")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+49d99d103d9a48c3f79de1d71a730b5e7065e310")]
 [assembly: System.Reflection.AssemblyProductAttribute("Markdown-Note-taking-App")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Markdown-Note-taking-App")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

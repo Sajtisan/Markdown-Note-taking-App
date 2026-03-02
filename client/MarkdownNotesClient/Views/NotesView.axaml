@@ -3,7 +3,11 @@
              xmlns:data="using:MarkdownNotesClient.Data"
              xmlns:md="https://github.com/whistyun/Markdown.Avalonia"
              x:Class="MarkdownNotesClient.Views.NotesView">
-
+    <UserControl.Styles>
+        <Style Selector="md|MarkdownScrollViewer">
+            <Setter Property="MarkdownStyleName" Value="Standard" />
+        </Style>
+    </UserControl.Styles>
     <Grid ColumnDefinitions="250, *">
 
         <DockPanel Grid.Column="0" Background="#2d2d30">
@@ -46,7 +50,7 @@
                                 <Button.Flyout>
                                     <MenuFlyout>
                                         <MenuItem Header="Delete" Click="OnDeleteNoteClick" Foreground="#f44336"/>
-                                </MenuFlyout>
+                                    </MenuFlyout>
                                 </Button.Flyout>
                             </Button>
                         </Grid>
@@ -79,12 +83,12 @@
                          Grid.Column="0"
                          AcceptsReturn="True"
                          TextWrapping="Wrap"
-                         Watermark="Start typing your markdown here..."
+                         TextChanged="OnContentChanged"
                          BorderThickness="0"
                          Margin="0,0,10,0"/>
 
                 <Border Grid.Column="1" Background="#1e1e1e" CornerRadius="5" Padding="15">
-                    <md:MarkdownScrollViewer Markdown="{Binding Text, ElementName=NoteContentField}"/>
+                    <md:MarkdownScrollViewer x:Name="MarkdownPreview"/>
                 </Border>
 
             </Grid>

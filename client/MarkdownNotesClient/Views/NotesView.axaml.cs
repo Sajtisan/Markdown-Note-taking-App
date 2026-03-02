@@ -1,6 +1,7 @@
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.VisualTree;
+using Avalonia.Threading;
 using MarkdownNotesClient.Data;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -12,11 +13,26 @@ namespace MarkdownNotesClient.Views;
 public partial class NotesView : UserControl
 {
     private ObservableCollection<LocalNote> _myNotes = new();
+    private DispatcherTimer _renderTimer;
 
     public NotesView()
     {
         InitializeComponent();
         NotesList.ItemsSource = _myNotes;
+        _renderTimer = new DispatcherTimer
+        {
+            Interval = TimeSpan.FromMilliseconds(400)
+        };
+        _renderTimer.Tick += (s, e) =>
+        {
+            _renderTimer.Stop();
+            MarkdownPreview.Markdown = NoteContentField.Text;
+        };
+    }
+    private void OnContentChanged(object sender, TextChangedEventArgs e)
+    {
+        _renderTimer.Stop();
+        _renderTimer.Start();
     }
 
     public async void LoadNotes()
@@ -102,6 +118,7 @@ public partial class NotesView : UserControl
         {
             NoteTitleField.Text = selectedNote.Title;
             NoteContentField.Text = selectedNote.Content;
+            NoteContentField.CaretIndex = 0;
         }
     }
 
