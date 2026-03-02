@@ -6,72 +6,97 @@
     <Panel>
         <controls:BackgroundManager x:Name="DynamicCanvas" />
 
-        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10" Spacing="10">
-            <ToggleButton x:Name="FogToggle" 
-                          Content="🌫️ FX: ON" 
-                          IsChecked="True" 
-                          Click="OnFogToggleClick" 
-                          Background="#1E1E1E" 
-                          Foreground="White" 
-                          CornerRadius="5"/>
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="20" Spacing="10">
+            <ToggleButton x:Name="FogToggle" Content="🌫️ FX: ON" IsChecked="True" Click="OnFogToggleClick" 
+                          Padding="15,8" Background="#40000000" Foreground="White" CornerRadius="8"/>
+            <Button x:Name="ThemeCycleButton" Content="🎨 Theme: Dark" Click="OnThemeCycleClick" 
+                    Padding="15,8" Background="#40000000" Foreground="White" CornerRadius="8"/>
+        </StackPanel>
+
+        <Border Width="380" VerticalAlignment="Center" HorizontalAlignment="Center"
+                Background="#33000000" 
+                BorderBrush="#26FFFFFF" 
+                BorderThickness="1"
+                CornerRadius="20" 
+                Padding="40">
             
-            <Button x:Name="ThemeCycleButton" 
-                    Content="🎨 Theme: Dark" 
-                    Click="OnThemeCycleClick" 
-                    Background="#1E1E1E" 
-                    Foreground="White" 
-                    CornerRadius="5"/>
-        </StackPanel>
+            <Border.BoxShadow>
+                <BoxShadows>0 15 40 0 #40000000</BoxShadows>
+            </Border.BoxShadow>
 
-        <Button x:Name="RegOrLogButton" Content="Register" HorizontalAlignment="Right" VerticalAlignment="Top" Click="RegisterOrLoginClick" Margin="10" Background="#1E1E1E" Foreground="White" CornerRadius="5"/> 
+            <StackPanel Spacing="30">
+                
+                <Panel x:Name="LoginPanel" IsVisible="True">
+                    <StackPanel Spacing="20">
+                        <TextBlock Text="Welcome" FontSize="28" FontWeight="Normal" HorizontalAlignment="Center" Foreground="White" Margin="0,0,0,10"/>
+                        
+                        <TextBox x:Name="LoginUsernameField" Watermark="Username" 
+                                 FontSize="16" Padding="15,12"
+                                 Background="#1AFFFFFF" Foreground="White" BorderBrush="#33FFFFFF" BorderThickness="1" CornerRadius="10"/>
 
-        <StackPanel Margin="20" Spacing="10" Width="300" HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <TextBox x:Name="LoginPasswordField" Watermark="Password" PasswordChar="•" 
+                                 FontSize="16" Padding="15,12"
+                                 Background="#1AFFFFFF" Foreground="White" BorderBrush="#33FFFFFF" BorderThickness="1" CornerRadius="10"/>
 
-            <Panel x:Name="LoginPanel" IsVisible="True">
-                <StackPanel>
-                    <TextBlock Text="Login" FontSize="24" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,0,0,20"/>
+                        <Button Content="Login" FontSize="16" FontWeight="Bold" 
+                                HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"
+                                Background="#33FFFFFF" Foreground="White" BorderBrush="#4DFFFFFF" BorderThickness="1" CornerRadius="10" Padding="12" 
+                                Click="OnLoginClick" Margin="0,10,0,0" Cursor="Hand">
+                            <Button.Transitions>
+                                <Transitions>
+                                    <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.1"/>
+                                </Transitions>
+                            </Button.Transitions>
+                            <Button.Styles>
+                                <Style Selector="Button:pointerover">
+                                    <Setter Property="RenderTransform" Value="scale(1.02)"/>
+                                    <Setter Property="Background" Value="#4DFFFFFF"/> 
+                                </Style>
+                            </Button.Styles>
+                        </Button>
+                        
+                        <TextBlock x:Name="LoginErrorText" Foreground="#FF5555" FontSize="14" HorizontalAlignment="Center" IsVisible="False" TextWrapping="Wrap"/>
+                    </StackPanel>
+                </Panel>
 
-                    <TextBlock Text="Username"/>
-                    <TextBox x:Name="LoginUsernameField" Watermark="Enter username..."/>
+                <Panel x:Name="RegisterPanel" IsVisible="False">
+                    <StackPanel Spacing="20">
+                        <TextBlock Text="Join" FontSize="28" FontWeight="Normal" HorizontalAlignment="Center" Foreground="White" Margin="0,0,0,10"/>
+                        
+                        <TextBox x:Name="RegUsernameField" Watermark="Username" 
+                                 FontSize="16" Padding="15,12"
+                                 Background="#1AFFFFFF" Foreground="White" BorderBrush="#33FFFFFF" BorderThickness="1" CornerRadius="10"/>
 
-                    <TextBlock Text="Password"/>
-                    <TextBox x:Name="LoginPasswordField" Watermark="Enter password..." PasswordChar="*"/>
+                        <TextBox x:Name="RegPasswordField" Watermark="Password" PasswordChar="•" 
+                                 FontSize="16" Padding="15,12"
+                                 Background="#1AFFFFFF" Foreground="White" BorderBrush="#33FFFFFF" BorderThickness="1" CornerRadius="10"/>
 
-                    <Button Content="Login"
-                            HorizontalAlignment="Stretch"
-                            HorizontalContentAlignment="Center"
-                            Click="OnLoginClick"
-                            Background="#2196F3"
-                            Foreground="White"
-                            Margin="0,10,0,0"/>
+                        <Button Content="Register" FontSize="16" FontWeight="Bold" 
+                                HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"
+                                Background="#33FFFFFF" Foreground="White" BorderBrush="#4DFFFFFF" BorderThickness="1" CornerRadius="10" Padding="12" 
+                                Click="OnRegisterClick" Margin="0,10,0,0" Cursor="Hand">
+                            <Button.Transitions>
+                                <Transitions>
+                                    <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.1"/>
+                                </Transitions>
+                            </Button.Transitions>
+                            <Button.Styles>
+                                <Style Selector="Button:pointerover">
+                                    <Setter Property="RenderTransform" Value="scale(1.02)"/>
+                                    <Setter Property="Background" Value="#4DFFFFFF"/>
+                                </Style>
+                            </Button.Styles>
+                        </Button>
+                        
+                        <TextBlock x:Name="RegErrorText" Foreground="#FF5555" FontSize="14" HorizontalAlignment="Center" IsVisible="False" TextWrapping="Wrap"/>
+                    </StackPanel>
+                </Panel>
 
-                    <TextBlock x:Name="LoginErrorText" Foreground="Red" HorizontalAlignment="Center" IsVisible="False"/>
-                </StackPanel>
-            </Panel>
+                <Button x:Name="RegOrLogButton" Content="Register" 
+                        HorizontalAlignment="Center" Background="Transparent" 
+                        Foreground="#99FFFFFF" FontSize="14" Click="RegisterOrLoginClick" Cursor="Hand"/>
 
-            <Panel x:Name="RegisterPanel" IsVisible="False">
-                <StackPanel>
-                    <TextBlock Text="Register" FontSize="24" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,0,0,20"/>
-
-                    <TextBlock Text="Username"/>
-                    <TextBox x:Name="RegUsernameField" Watermark="Enter username..."/>
-
-                    <TextBlock Text="Password"/>
-                    <TextBox x:Name="RegPasswordField" Watermark="Enter password..." PasswordChar="*"/>
-
-                    <Button Content="Register"
-                            HorizontalAlignment="Stretch"
-                            HorizontalContentAlignment="Center"
-                            Click="OnRegisterClick"
-                            Background="#4CAF50"
-                            Foreground="White"
-                            Margin="0,10,0,0"/>
-
-                    <TextBlock x:Name="RegErrorText" Foreground="Red" HorizontalAlignment="Center" IsVisible="False"/>
-                </StackPanel>
-            </Panel>
-
-        </StackPanel>
-
+            </StackPanel>
+        </Border>
     </Panel>
 </UserControl>
