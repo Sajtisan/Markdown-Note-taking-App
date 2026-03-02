@@ -1,30 +1,84 @@
 <Styles xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:controls="using:MarkdownNotesClient.Controls">
-  
-  <Style Selector="controls|GlassWindow">
-    <Setter Property="Background" Value="Transparent"/>
-    <Setter Property="TransparencyLevelHint" Value="Transparent"/>
-    <Setter Property="SystemDecorations" Value="None"/>
-    
-    <Setter Property="Template">
-      <ControlTemplate>
-        <Border CornerRadius="15" ClipToBounds="True" Background="#0A0A0C" 
-                BorderBrush="#30FFFFFF" BorderThickness="1">
-          <Panel>
-            <ContentPresenter Content="{TemplateBinding Content}"/>
 
-            <Grid VerticalAlignment="Top" Height="45" Background="Transparent" Name="PART_TitleBar">
-              <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" 
-                          VerticalAlignment="Center" Margin="0,0,15,0" Spacing="10">
-                <Button Width="12" Height="12" CornerRadius="6" Background="#FFB800" Name="PART_MinBtn" BorderThickness="0"/>
-                <Button Width="12" Height="12" CornerRadius="6" Background="#00C853" Name="PART_MaxBtn" BorderThickness="0"/>
-                <Button Width="12" Height="12" CornerRadius="6" Background="#FF3D00" Name="PART_CloseBtn" BorderThickness="0"/>
-              </StackPanel>
-            </Grid>
-          </Panel>
-        </Border>
-      </ControlTemplate>
-    </Setter>
-  </Style>
+    <Style Selector="controls|GlassWindow">
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="TransparencyLevelHint" Value="Transparent"/>
+        <Setter Property="SystemDecorations" Value="None"/>
+
+        <Setter Property="Template">
+            <ControlTemplate>
+                <Border CornerRadius="15" ClipToBounds="True" Background="#0A0A0C"
+                        BorderBrush="#30FFFFFF" BorderThickness="1">
+                    <Panel>
+                        
+                        <Grid Name="PART_TitleBar" VerticalAlignment="Top" Height="45" Background="Transparent" />
+
+                        <ContentPresenter Content="{TemplateBinding Content}"/>
+
+                        <Border HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0"
+                                CornerRadius="0, 16, 0, 16" 
+                                Background="{DynamicResource SystemControlBackgroundBaseLowBrush}"
+                                ClipToBounds="True">
+
+                                <StackPanel Orientation="Horizontal" Spacing="0">
+
+                                    <StackPanel.Styles>
+                                        <Style Selector="Button.TitleBarBtn">
+                                            <Setter Property="Width" Value="32"/>
+                                            <Setter Property="Height" Value="32"/>
+                                            <Setter Property="CornerRadius" Value="16, 0, 16, 0"/>
+                                            <Setter Property="Background" Value="Transparent"/>
+                                            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                                            <Setter Property="VerticalContentAlignment" Value="Center"/>
+                                            <Setter Property="BorderThickness" Value="0"/>
+                                            <Setter Property="Cursor" Value="Hand"/>
+                                            <Setter Property="Transitions">
+                                                <Transitions>
+                                                    <BrushTransition Property="Background" Duration="0:0:0.2"/>
+                                                </Transitions>
+                                            </Setter>
+                                        </Style>
+
+                                        <Style Selector="Button.TitleBarBtn:pointerover">
+                                            <Setter Property="Background" Value="{DynamicResource SystemControlBackgroundBaseMediumBrush}"/>
+                                        </Style>
+
+                                        <Style Selector="Button.TitleBarBtn Rectangle.Icon">
+                                            <Setter Property="Width" Value="14"/>
+                                            <Setter Property="Height" Value="14"/>
+                                            <Setter Property="Fill" Value="{DynamicResource TextControlForeground}"/>
+                                        </Style>
+                                    </StackPanel.Styles>
+
+                                    <Button Classes="TitleBarBtn" Name="PART_MinBtn">
+                                        <Rectangle Classes="Icon">
+                                            <Rectangle.OpacityMask>
+                                                <ImageBrush Source="avares://MarkdownNotesClient/Assets/Icons/minimize.png" Stretch="Uniform"/>
+                                            </Rectangle.OpacityMask>
+                                        </Rectangle>
+                                    </Button>
+
+                                    <Button Classes="TitleBarBtn" Name="PART_MaxBtn">
+                                        <Rectangle Classes="Icon" RenderTransformOrigin="50%,50%">
+                                            <Rectangle.RenderTransform>
+                                                <ScaleTransform ScaleY="-1"/>
+                                            </Rectangle.RenderTransform>
+                                            <Rectangle.OpacityMask>
+                                                <ImageBrush Source="avares://MarkdownNotesClient/Assets/Icons/minimize.png" Stretch="Uniform"/>
+                                            </Rectangle.OpacityMask>
+                                        </Rectangle>
+                                    </Button>
+
+                                    <Button Classes="TitleBarBtn" Content="✕" Name="PART_CloseBtn"
+                                            Foreground="{DynamicResource TextControlForeground}"
+                                            FontWeight="Bold" FontSize="14"/>
+                                </StackPanel>
+                        </Border>
+                    </Panel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+    </Style>
 </Styles>

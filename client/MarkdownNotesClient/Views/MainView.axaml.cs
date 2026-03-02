@@ -83,41 +83,47 @@ public partial class MainView : UserControl
             RegErrorText.IsVisible = true;
         }
     }
-// 1. The Fog Toggle Method
-private void OnFogToggleClick(object sender, RoutedEventArgs e)
-{
-    if (FogToggle.IsChecked == true)
+    // 1. The Fog Toggle Method
+    private void OnFogToggleClick(object sender, RoutedEventArgs e)
     {
-        DynamicCanvas.IsVisible = true;
-        FogToggle.Content = "🌫️ FX: ON";
+        if (FogToggle.IsChecked == true)
+        {
+            DynamicCanvas.IsVisible = true;
+            FogToggle.Content = "🌫️ FX: ON";
+        }
+        else
+        {
+            DynamicCanvas.IsVisible = false;
+            FogToggle.Content = "🌫️ FX: OFF";
+        }
     }
-    else
-    {
-        DynamicCanvas.IsVisible = false;
-        FogToggle.Content = "🌫️ FX: OFF";
-    }
-}
 
-// 2. The Theme Cycle Method
-private void OnThemeCycleClick(object sender, RoutedEventArgs e)
-{
-    _currentThemeIndex++;
-    if (_currentThemeIndex > 3) _currentThemeIndex = 1;
-
-    switch (_currentThemeIndex)
+    // 2. The Theme Cycle Method
+    private void OnThemeCycleClick(object sender, RoutedEventArgs e)
     {
-        case 1:
-            DynamicCanvas.LoadShader(MarkdownNotesClient.Services.ThemeManager.Theme_Dark);
-            ThemeCycleButton.Content = "🎨 Theme: Dark";
-            break;
-        case 2:
-            DynamicCanvas.LoadShader(MarkdownNotesClient.Services.ThemeManager.Theme_Dracula);
-            ThemeCycleButton.Content = "🎨 Theme: Dracula";
-            break;
-        case 3:
-            DynamicCanvas.LoadShader(MarkdownNotesClient.Services.ThemeManager.Theme_Light);
-            ThemeCycleButton.Content = "🎨 Theme: Light";
-            break;
+        _currentThemeIndex++;
+        if (_currentThemeIndex > 3) _currentThemeIndex = 1;
+
+        switch (_currentThemeIndex)
+        {
+            case 1:
+                DynamicCanvas.LoadShader(MarkdownNotesClient.Services.ThemeManager.Theme_Dark);
+                ThemeCycleButton.Content = "🎨 Theme: Dark";
+                // Force Avalonia to Dark Mode UI
+                Avalonia.Application.Current!.RequestedThemeVariant = Avalonia.Styling.ThemeVariant.Dark;
+                break;
+            case 2:
+                DynamicCanvas.LoadShader(MarkdownNotesClient.Services.ThemeManager.Theme_Dracula);
+                ThemeCycleButton.Content = "🎨 Theme: Dracula";
+                // Force Avalonia to Dark Mode UI (Dracula is a dark theme)
+                Avalonia.Application.Current!.RequestedThemeVariant = Avalonia.Styling.ThemeVariant.Dark;
+                break;
+            case 3:
+                DynamicCanvas.LoadShader(MarkdownNotesClient.Services.ThemeManager.Theme_Light);
+                ThemeCycleButton.Content = "🎨 Theme: Light";
+                // Force Avalonia to Light Mode UI (This will turn your text and buttons dark!)
+                Avalonia.Application.Current!.RequestedThemeVariant = Avalonia.Styling.ThemeVariant.Light;
+                break;
+        }
     }
-}
 }
