@@ -1,98 +1,170 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:controls="using:MarkdownNotesClient.Controls"
              xmlns:data="using:MarkdownNotesClient.Data"
              xmlns:md="https://github.com/whistyun/Markdown.Avalonia"
              x:Class="MarkdownNotesClient.Views.NotesView">
+
     <UserControl.Styles>
         <Style Selector="md|MarkdownScrollViewer">
             <Setter Property="MarkdownStyleName" Value="Standard" />
         </Style>
     </UserControl.Styles>
-    <Grid ColumnDefinitions="250, *">
 
-        <DockPanel Grid.Column="0" Background="#2d2d30">
-            <StackPanel DockPanel.Dock="Top" Margin="10">
-                <Button x:Name="CreateNoteButton"
-                        Content="+ New Note"
-                        Click="OnCreateNoteClick"
-                        HorizontalAlignment="Stretch"
-                        HorizontalContentAlignment="Center"
-                        Margin="0,0,0,5"/>
+    <Panel>
+        <controls:BackgroundManager x:Name="DynamicCanvas" />
 
-                <Button x:Name="SyncButton"
-                        Content="🔄 Sync to Cloud"
-                        Click="OnSyncClick"
-                        HorizontalAlignment="Stretch"
-                        HorizontalContentAlignment="Center"
-                        Background="#007ACC"
-                        Foreground="White"
-                        Margin="0,0,0,5"/>
+        <Panel Margin="0,50,0,0">
+            <DockPanel Margin="50,20,20,20">
+                <DockPanel DockPanel.Dock="Top" Margin="0,0,0,10">
+                    <Button x:Name="SaveNoteButton" Content="Save" Click="OnSaveNoteClick" DockPanel.Dock="Right" Background="#4CAF50" Foreground="White" VerticalAlignment="Center" Margin="10,0,0,0" CornerRadius="8"/>
+                    <TextBox x:Name="NoteTitleField" Watermark="Note Title..." Background="rgba(255, 255, 255, 0.2)" CornerRadius="8" FontSize="24" FontWeight="Bold" BorderThickness="0"/>
+                </DockPanel>
 
-                <Button x:Name="LogoutButton"
-                        Content="Log Out"
-                        Click="OnLogoutClick"
-                        HorizontalAlignment="Stretch"
-                        HorizontalContentAlignment="Center"
-                        Background="#d32f2f"
-                        Foreground="White"/>
-            </StackPanel>
-
-            <ListBox x:Name="NotesList"
-                     Margin="10"
-                     Background="Transparent"
-                     Foreground="White"
-                     SelectionChanged="OnNoteSelected">
-                <ListBox.ItemTemplate>
-                    <DataTemplate x:DataType="data:LocalNote">
-                        <Grid ColumnDefinitions="*, Auto">
-                            <TextBlock Grid.Column="0" Text="{Binding Title}" FontSize="16" Padding="5" VerticalAlignment="Center"/>
-                            <Button Grid.Column="1" Content="⋮" Background="Transparent" FontSize="18" FontWeight="Bold" Padding="10,0" VerticalAlignment="Center">
-                                <Button.Flyout>
-                                    <MenuFlyout>
-                                        <MenuItem Header="Delete" Click="OnDeleteNoteClick" Foreground="#f44336"/>
-                                    </MenuFlyout>
-                                </Button.Flyout>
-                            </Button>
-                        </Grid>
-                    </DataTemplate>
-                </ListBox.ItemTemplate>
-            </ListBox>
-        </DockPanel>
-
-        <DockPanel Grid.Column="1" Margin="20">
-            <DockPanel DockPanel.Dock="Top" Margin="0,0,0,10">
-                <Button x:Name="SaveNoteButton"
-                        Content="Save"
-                        Click="OnSaveNoteClick"
-                        DockPanel.Dock="Right"
-                        Background="#4CAF50"
-                        Foreground="White"
-                        VerticalAlignment="Center"
-                        Margin="10,0,0,0"/>
-
-                <TextBox x:Name="NoteTitleField"
-                         Watermark="Note Title..."
-                         FontSize="24"
-                         FontWeight="Bold"
-                         BorderThickness="0"/>
+                <Grid ColumnDefinitions="*, *">
+                    <TextBox x:Name="NoteContentField" Grid.Column="0" Background="rgba(255, 255, 255, 0.4)" CornerRadius="8" AcceptsReturn="True" TextWrapping="Wrap" TextChanged="OnContentChanged" BorderThickness="0" Margin="0,0,10,0"/>
+                    <Border Grid.Column="1" Background="rgba(255, 255, 255, 0.4)" CornerRadius="8" Padding="15" BorderBrush="#26FFFFFF" BorderThickness="1">
+                        <md:MarkdownScrollViewer x:Name="MarkdownPreview"/>
+                    </Border>
+                </Grid>
             </DockPanel>
 
-            <Grid ColumnDefinitions="*, *">
+            <Grid x:Name="NotesSidebarContainer" Classes="open" HorizontalAlignment="Left" ClipToBounds="False" >
+                <Grid.Styles>
+                    <Style Selector="Grid.closed">
+                        <Setter Property="RenderTransform" Value="translateX(-280px)"/>
+                    </Style>
+                    <Style Selector="Grid.open">
+                        <Setter Property="RenderTransform" Value="translateX(0px)"/>
+                    </Style>
+                    <Style Selector="Grid">
+                        <Setter Property="Transitions">
+                            <Transitions>
+                                <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.4" Easing="CubicEaseOut"/>
+                            </Transitions>
+                        </Setter>
+                    </Style>
+                </Grid.Styles>
 
-                <TextBox x:Name="NoteContentField"
-                         Grid.Column="0"
-                         AcceptsReturn="True"
-                         TextWrapping="Wrap"
-                         TextChanged="OnContentChanged"
-                         BorderThickness="0"
-                         Margin="0,0,10,0"/>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="280"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
 
-                <Border Grid.Column="1" Background="#1e1e1e" CornerRadius="5" Padding="15">
-                    <md:MarkdownScrollViewer x:Name="MarkdownPreview"/>
+                <Border Grid.Column="0" Background="#E61E1E1E" BorderBrush="#26FFFFFF" BorderThickness="0,0,1,0" Padding="10" CornerRadius="8">
+                    <DockPanel>
+                        <Grid DockPanel.Dock="Top" ColumnDefinitions="*, *" Margin="0,0,0,15">
+                            <Button x:Name="CreateNoteButton" Grid.Column="0" Content="+ New"
+                                    Click="OnCreateNoteClick" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"
+                                    Background="#4DFFFFFF" Foreground="White" CornerRadius="8" Cursor="Hand"
+                                    Margin="0,0,5,0"/>
+                        </Grid>
+
+                        <ListBox x:Name="NotesList" Background="Transparent" Foreground="White" SelectionChanged="OnNoteSelected">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate x:DataType="data:LocalNote">
+                                    <Grid ColumnDefinitions="*, Auto">
+                                        <TextBlock Grid.Column="0" Text="{Binding Title}" FontSize="16" Padding="10,5" VerticalAlignment="Center"/>
+                                        <Button Grid.Column="1" Content="⋮" Background="Transparent" FontSize="18" FontWeight="Bold" Padding="10,0" VerticalAlignment="Center" Cursor="Hand">
+                                            <Button.Flyout>
+                                                <MenuFlyout>
+                                                    <MenuItem Header="Delete" Click="OnDeleteNoteClick" Foreground="#f44336"/>
+                                                </MenuFlyout>
+                                            </Button.Flyout>
+                                        </Button>
+                                    </Grid>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                    </DockPanel>
                 </Border>
 
+                <Button Grid.Column="1" x:Name="NotesSidebarTriggerBtn"
+                        Width="30" Height="80" CornerRadius="0, 15, 15, 0"
+                        Background="#E61E1E1E" BorderBrush="#26FFFFFF" BorderThickness="0,1,1,1"
+                        Margin="-1,0,0,0" Click="OnNotesSidebarToggleClick" Cursor="Hand" VerticalAlignment="Center">
+                    <Button.Transitions>
+                        <Transitions>
+                            <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.2" Easing="CubicEaseOut"/>
+                            <BrushTransition Property="Background" Duration="0:0:0.2"/>
+                        </Transitions>
+                    </Button.Transitions>
+                    <Button.Styles>
+                        <Style Selector="Button:pointerover">
+                            <Setter Property="RenderTransform" Value="translateX(8px)"/>
+                            <Setter Property="Background" Value="#4DFFFFFF"/>
+                        </Style>
+                    </Button.Styles>
+                    <TextBlock x:Name="NotesSidebarArrow" Classes="open" Text="&lt;" Foreground="White" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <TextBlock.Styles>
+                            <Style Selector="TextBlock.closed"><Setter Property="RenderTransform" Value="scaleX(-1)"/></Style>
+                            <Style Selector="TextBlock.open"><Setter Property="RenderTransform" Value="scaleX(1)"/></Style>
+                            <Style Selector="TextBlock">
+                                <Setter Property="Transitions"><Transitions><TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.3" Easing="CubicEaseInOut"/></Transitions></Setter>
+                            </Style>
+                        </TextBlock.Styles>
+                    </TextBlock>
+                </Button>
             </Grid>
-        </DockPanel>
+        </Panel>
 
-    </Grid>
+        <Button x:Name="LogoutButton" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="15,15,0,0"
+                Background="#338e0000" BorderThickness="0" Cursor="Hand" ToolTip.Tip="Log Out" Click="OnLogoutClick" CornerRadius="8">
+            <Image Source="avares://MarkdownNotesClient/Assets/Icons/logout.png" Width="24" Height="24"/>
+        </Button>
+
+        <Grid VerticalAlignment="Top" HorizontalAlignment="Stretch" ClipToBounds="False" PointerExited="OnSettingsPointerExited">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <Border Grid.Row="0" x:Name="SettingsDrawerBorder" Height="0" Margin="20,0,20,0"
+                    Background="#F2121212" BorderBrush="#33FFFFFF" BorderThickness="1,0,1,1" CornerRadius="0,0,20,20" ClipToBounds="True">
+
+                <Border.Transitions>
+                    <Transitions>
+                        <DoubleTransition Property="Height" Duration="0:0:0.4" Easing="CubicEaseOut"/>
+                    </Transitions>
+                </Border.Transitions>
+
+                <Border.BoxShadow>
+                    <BoxShadows>0 20 60 0 #A6000000</BoxShadows>
+                </Border.BoxShadow>
+
+                <ScrollViewer Padding="40">
+                    <StackPanel Spacing="20">
+                        <TextBlock Text="Settings" FontSize="32" FontWeight="Normal" Foreground="White" Margin="0,0,0,10"/>
+                        <TextBlock Text="Appearance settings will go here..." Foreground="#80FFFFFF"/>
+                    </StackPanel>
+                </ScrollViewer>
+            </Border>
+
+            <Button Grid.Row="1" x:Name="SettingsTriggerBtn" Width="100" Height="30" CornerRadius="0, 0, 50, 50"
+                    Background="#33000000" BorderBrush="#33FFFFFF" BorderThickness="1,0,1,1" Margin="0,-10,0,0"
+                    Click="OnSettingsToggleClick" Cursor="Hand" HorizontalAlignment="Center">
+                <Button.Transitions>
+                    <Transitions>
+                        <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.2" Easing="CubicEaseOut"/>
+                        <BrushTransition Property="Background" Duration="0:0:0.2"/>
+                    </Transitions>
+                </Button.Transitions>
+                <Button.Styles>
+                    <Style Selector="Button:pointerover">
+                        <Setter Property="RenderTransform" Value="translateY(10px)"/>
+                        <Setter Property="Background" Value="#4DFFFFFF"/>
+                    </Style>
+                </Button.Styles>
+                <Path x:Name="SettingsArrow" Classes="closed" Data="M 0 0 L 8 8 L 16 0" Stroke="White" StrokeThickness="2.5" StrokeLineCap="Round" StrokeJoin="Round" HorizontalAlignment="Center" VerticalAlignment="Center" RenderTransformOrigin="50%,50%">
+                    <Path.Styles>
+                        <Style Selector="Path.closed"><Setter Property="RenderTransform" Value="scaleY(1)"/></Style>
+                        <Style Selector="Path.open"><Setter Property="RenderTransform" Value="scaleY(-1)"/></Style>
+                        <Style Selector="Path">
+                            <Setter Property="Transitions"><Transitions><TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.3" Easing="CubicEaseInOut"/></Transitions></Setter>
+                        </Style>
+                    </Path.Styles>
+                </Path>
+            </Button>
+        </Grid>
+    </Panel>
 </UserControl>

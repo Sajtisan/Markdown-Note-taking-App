@@ -7,37 +7,41 @@ using System.Net.Http.Headers;
 using MarkdownNotesClient.Data;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
-using Microsoft.VisualBasic;
+using System.Text.Json;
 
 namespace MarkdownNotesClient.Services;
 
 public class ApiService
 {
+    // ---- Fields & Properties ----
     private readonly HttpClient _httpClient;
     private string? _token;
+
     public string? GetToken() => _token;
+
+    // ---- Constructor & Configuration ----
     public ApiService()
     {
         _httpClient = new HttpClient { BaseAddress = new Uri("http://localhost:5080/") };
     }
+
     public void SetToken(string token)
     {
         _token = token;
         _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _token);
     }
+
+    // ---- Authentication Logic ----
     public async Task<string> LoginAsync(string username, string password)
     {
         try
         {
-            // 1. Using the absolute URL
-            var response = await _httpClient.PostAsJsonAsync("http://localhost:5080/api/login", new { username, password });
+            var response = await _httpClient.PostAsJsonAsync("api/login", new { username, password });
 
             if (response.IsSuccessStatusCode)
             {
                 var rawJson = await response.Content.ReadAsStringAsync();
-
-                // 2. Safely parse the JSON, checking both uppercase and lowercase
-                using var jsonDoc = System.Text.Json.JsonDocument.Parse(rawJson);
+                using var jsonDoc = JsonDocument.Parse(rawJson);
                 string? token = null;
 
                 if (jsonDoc.RootElement.TryGetProperty("token", out var t1)) token = t1.GetString();
@@ -47,35 +51,30 @@ public class ApiService
                 {
                     _token = token;
                     SetToken(_token);
-                    return "SUCCESS"; // We are in!
+                    return "SUCCESS";
                 }
-
                 return $"JSON Parse Failed. Server sent: {rawJson}";
             }
-
             return $"Server Rejected: {response.StatusCode}";
         }
         catch (Exception ex)
         {
-            // 3. Return the exact crash message!
             return $"Network Crash: {ex.Message}";
         }
     }
+
     public async Task<string> RegisterAsync(string username, string password)
     {
         try
         {
-            // 1. Send the data to your new backend route
-            var response = await _httpClient.PostAsJsonAsync("http://localhost:5080/api/register", new { username, password });
+            var response = await _httpClient.PostAsJsonAsync("api/register", new { username, password });
 
             if (response.IsSuccessStatusCode)
             {
                 return "SUCCESS";
             }
 
-            // 2. If it failed (e.g., username taken), grab the error message the server sent
             var errorText = await response.Content.ReadAsStringAsync();
-            // Remove quotes from the JSON string response if there are any
             return $"Registration Failed: {errorText.Trim('"')}";
         }
         catch (Exception ex)
@@ -83,6 +82,8 @@ public class ApiService
             return $"Network Crash: {ex.Message}";
         }
     }
+
+    // ---- Note Operations (Cloud API) ----
     public async Task<List<NoteDto>> GetMyNotesAsync()
     {
         try
@@ -96,23 +97,17 @@ public class ApiService
             return new List<NoteDto>();
         }
     }
+
     public async Task<NoteDto?> CreateNoteAsync(string title, string content)
     {
         try
         {
             var response = await _httpClient.PostAsJsonAsync("api/notes", new { title, content });
-
-            if (response.IsSuccessStatusCode)
-            {
-                return await response.Content.ReadFromJsonAsync<NoteDto>();
-            }
-            return null;
+            return response.IsSuccessStatusCode ? await response.Content.ReadFromJsonAsync<NoteDto>() : null;
         }
-        catch
-        {
-            return null;
-        }
+        catch { return null; }
     }
+
     public async Task<bool> UpdateNoteAsync(NoteDto note)
     {
         try
@@ -120,11 +115,9 @@ public class ApiService
             var response = await _httpClient.PutAsJsonAsync($"api/notes/{note.Id}", note);
             return response.IsSuccessStatusCode;
         }
-        catch
-        {
-            return false;
-        }
+        catch { return false; }
     }
+
     public async Task<bool> DeleteNoteAsync(int id)
     {
         try
@@ -132,14 +125,15 @@ public class ApiService
             var response = await _httpClient.DeleteAsync($"api/notes/{id}");
             return response.IsSuccessStatusCode;
         }
-        catch
-        {
-            return false;
-        }
+        catch { return false; }
     }
+
+    // ---- Synchronization Logic ----
     public async Task SyncWithCloudAsync()
     {
         using var db = new LocalDbContext();
+        
+        // 1. Push local changes to the cloud
         var unsyncedNotes = await db.Notes.Where(n => !n.IsSynced).ToListAsync();
         foreach (var note in unsyncedNotes)
         {
@@ -170,14 +164,14 @@ public class ApiService
                     if (response.IsSuccessStatusCode) note.IsSynced = true;
                 }
             }
-            catch { /* Network drop */ }
+            catch { /* Network drop during push */ }
         }
-
         await db.SaveChangesAsync();
+
+        // 2. Pull changes from the cloud to local
         try
         {
             var cloudNotes = await GetMyNotesAsync();
-
             if (cloudNotes != null && cloudNotes.Any())
             {
                 foreach (var cloudNote in cloudNotes)
@@ -209,13 +203,14 @@ public class ApiService
     }
 }
 
+// ---- Data Transfer Objects (DTOs) ----
 public class LoginResponse { public string Token { get; set; } = ""; }
-public class NoteDto //Data transfer object - DTO
+
+public class NoteDto
 {
     public int Id { get; set; }
     public string Title { get; set; } = "";
     public string Content { get; set; } = "";
     public DateTime CreatedAt { get; set; }
     public bool IsPublic { get; set; }
-
 }
