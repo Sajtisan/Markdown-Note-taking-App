@@ -1,0 +1,9 @@
+<Solution>
+  <Folder Name="/api/">
+    <Project Path="api/Api.csproj" />
+  </Folder>
+  <Folder Name="/client/">
+    <Project Path="client/MarkdownNotesClient/MarkdownNotesClient.csproj" />
+  </Folder>
+  <Project Path="shared/shared.csproj" />
+</Solution>

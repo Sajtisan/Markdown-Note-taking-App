@@ -1,4 +1,4 @@
-namespace Markdown_Note_taking_App.Models;
+namespace shared.Models;
 
 public class Note
 {
@@ -9,5 +9,4 @@ public class Note
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     public bool IsPublic { get; set; } = false;
     public int AuthorId { get; set; }
-    public User? Author { get; set; }
 }

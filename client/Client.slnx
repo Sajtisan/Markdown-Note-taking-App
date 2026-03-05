@@ -1,0 +1,7 @@
+<Solution>
+  <Project Path="MarkdownNotesClient\MarkdownNotesClient.csproj" />
+  
+  <Project Path="MarkdownNotesClient.Desktop\MarkdownNotesClient.Desktop.csproj" />
+  <Project Path="MarkdownNotesClient.Android\MarkdownNotesClient.Android.csproj" />
+  <Project Path="MarkdownNotesClient.Browser\MarkdownNotesClient.Browser.csproj" />
+</Solution>

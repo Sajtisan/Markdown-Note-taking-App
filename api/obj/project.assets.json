@@ -2930,9 +2930,9 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\david\\Documents\\SoloProjects\\Markdown-Note-taking-App\\api\\Markdown-Note-taking-App.csproj",
-      "projectName": "Markdown-Note-taking-App",
-      "projectPath": "C:\\Users\\david\\Documents\\SoloProjects\\Markdown-Note-taking-App\\api\\Markdown-Note-taking-App.csproj",
+      "projectUniqueName": "C:\\Users\\david\\Documents\\SoloProjects\\Markdown-Note-taking-App\\api\\Api.csproj",
+      "projectName": "Api",
+      "projectPath": "C:\\Users\\david\\Documents\\SoloProjects\\Markdown-Note-taking-App\\api\\Api.csproj",
       "packagesPath": "C:\\Users\\david\\.nuget\\packages\\",
       "outputPath": "C:\\Users\\david\\Documents\\SoloProjects\\Markdown-Note-taking-App\\api\\obj\\",
       "projectStyle": "PackageReference",
@@ -3017,7 +3017,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.102/PortableRuntimeIdentifierGraph.json",
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.103/PortableRuntimeIdentifierGraph.json",
         "packagesToPrune": {
           "Microsoft.AspNetCore": "(,10.0.32767]",
           "Microsoft.AspNetCore.Antiforgery": "(,10.0.32767]",

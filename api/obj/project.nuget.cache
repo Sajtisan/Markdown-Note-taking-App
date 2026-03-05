@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "B6F4utVlChw=",
+  "dgSpecHash": "FVPzaPh7TMA=",
   "success": true,
-  "projectFilePath": "C:\\Users\\david\\Documents\\SoloProjects\\Markdown-Note-taking-App\\api\\Markdown-Note-taking-App.csproj",
+  "projectFilePath": "C:\\Users\\david\\Documents\\SoloProjects\\Markdown-Note-taking-App\\api\\Api.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\david\\.nuget\\packages\\bcrypt.net-next\\4.1.0\\bcrypt.net-next.4.1.0.nupkg.sha512",
     "C:\\Users\\david\\.nuget\\packages\\humanizer.core\\2.14.1\\humanizer.core.2.14.1.nupkg.sha512",

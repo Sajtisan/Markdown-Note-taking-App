@@ -1,0 +1,12 @@
+C:\Users\david\Documents\SoloProjects\Markdown-Note-taking-App\shared\obj\Debug\net10.0\shared.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\david\Documents\SoloProjects\Markdown-Note-taking-App\shared\obj\Debug\net10.0\shared.AssemblyInfoInputs.cache
+C:\Users\david\Documents\SoloProjects\Markdown-Note-taking-App\shared\obj\Debug\net10.0\shared.AssemblyInfo.cs
+C:\Users\david\Documents\SoloProjects\Markdown-Note-taking-App\shared\obj\Debug\net10.0\shared.csproj.CoreCompileInputs.cache
+C:\Users\david\Documents\SoloProjects\Markdown-Note-taking-App\shared\obj\Debug\net10.0\shared.sourcelink.json
+C:\Users\david\Documents\SoloProjects\Markdown-Note-taking-App\shared\bin\Debug\net10.0\shared.deps.json
+C:\Users\david\Documents\SoloProjects\Markdown-Note-taking-App\shared\bin\Debug\net10.0\shared.dll
+C:\Users\david\Documents\SoloProjects\Markdown-Note-taking-App\shared\bin\Debug\net10.0\shared.pdb
+C:\Users\david\Documents\SoloProjects\Markdown-Note-taking-App\shared\obj\Debug\net10.0\shared.dll
+C:\Users\david\Documents\SoloProjects\Markdown-Note-taking-App\shared\obj\Debug\net10.0\refint\shared.dll
+C:\Users\david\Documents\SoloProjects\Markdown-Note-taking-App\shared\obj\Debug\net10.0\shared.pdb
+C:\Users\david\Documents\SoloProjects\Markdown-Note-taking-App\shared\obj\Debug\net10.0\ref\shared.dll
