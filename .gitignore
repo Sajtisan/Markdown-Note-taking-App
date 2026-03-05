@@ -1,0 +1,9 @@
+# Build folders
+[Bb]in/
+[Oo]bj/
+
+# User-specific files
+.vs/
+.idea/
+*.user
+*.suo

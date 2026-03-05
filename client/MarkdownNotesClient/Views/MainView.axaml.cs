@@ -3,6 +3,7 @@ using Avalonia.Interactivity;
 using Avalonia.VisualTree;
 using Avalonia.Input;
 using MarkdownNotesClient.Services;
+using MarkdownNotesClient.Controls;
 using MarkdownNotesClient.Data;
 using System;
 
@@ -70,7 +71,6 @@ public partial class MainView : UserControl
             {
                 var notesView = new NotesView();
                 window.Content = notesView;
-                notesView.LoadNotes();
             }
         }
         else

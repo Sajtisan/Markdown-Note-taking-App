@@ -3,6 +3,8 @@
              xmlns:controls="using:MarkdownNotesClient.Controls"
              xmlns:data="using:MarkdownNotesClient.Data"
              xmlns:md="https://github.com/whistyun/Markdown.Avalonia"
+             xmlns:vm="using:MarkdownNotesClient.ViewModels"
+             x:DataType="vm:NotesViewModel"
              x:Class="MarkdownNotesClient.Views.NotesView">
 
     <UserControl.Styles>
@@ -17,12 +19,13 @@
         <Panel Margin="0,50,0,0">
             <DockPanel Margin="50,20,20,20">
                 <DockPanel DockPanel.Dock="Top" Margin="0,0,0,10">
-                    <Button x:Name="SaveNoteButton" Content="Save" Click="OnSaveNoteClick" DockPanel.Dock="Right" Background="#4CAF50" Foreground="White" VerticalAlignment="Center" Margin="10,0,0,0" CornerRadius="8"/>
-                    <TextBox x:Name="NoteTitleField" Watermark="Note Title..." Background="rgba(255, 255, 255, 0.2)" CornerRadius="8" FontSize="24" FontWeight="Bold" BorderThickness="0"/>
+                    <Button x:Name="SaveNoteButton" Content="Save" Command="{Binding SaveNoteCommand}" DockPanel.Dock="Right" Background="#4CAF50" Foreground="White" VerticalAlignment="Center" Margin="10,0,0,0" CornerRadius="8"/>
+
+                    <TextBox x:Name="NoteTitleField" Text="{Binding SelectedNote.Title}" Watermark="Note Title..." Background="rgba(255, 255, 255, 0.2)" CornerRadius="8" FontSize="24" FontWeight="Bold" BorderThickness="0"/>
                 </DockPanel>
 
                 <Grid ColumnDefinitions="*, *">
-                    <TextBox x:Name="NoteContentField" Grid.Column="0" Background="rgba(255, 255, 255, 0.4)" CornerRadius="8" AcceptsReturn="True" TextWrapping="Wrap" TextChanged="OnContentChanged" BorderThickness="0" Margin="0,0,10,0"/>
+                    <TextBox x:Name="NoteContentField" Text="{Binding SelectedNote.Content}" Grid.Column="0" Background="rgba(255, 255, 255, 0.4)" CornerRadius="8" AcceptsReturn="True" TextWrapping="Wrap" TextChanged="OnContentChanged" BorderThickness="0" Margin="0,0,10,0"/>
                     <Border Grid.Column="1" Background="rgba(255, 255, 255, 0.4)" CornerRadius="8" Padding="15" BorderBrush="#26FFFFFF" BorderThickness="1">
                         <md:MarkdownScrollViewer x:Name="MarkdownPreview"/>
                     </Border>
@@ -55,12 +58,12 @@
                     <DockPanel>
                         <Grid DockPanel.Dock="Top" ColumnDefinitions="*, *" Margin="0,0,0,15">
                             <Button x:Name="CreateNoteButton" Grid.Column="0" Content="+ New"
-                                    Click="OnCreateNoteClick" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"
+                                    Command="{Binding CreateNoteCommand}" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"
                                     Background="#4DFFFFFF" Foreground="White" CornerRadius="8" Cursor="Hand"
                                     Margin="0,0,5,0"/>
                         </Grid>
 
-                        <ListBox x:Name="NotesList" Background="Transparent" Foreground="White" SelectionChanged="OnNoteSelected">
+                        <ListBox x:Name="NotesList" ItemsSource="{Binding Notes}" SelectedItem="{Binding SelectedNote, Mode=TwoWay}" Background="Transparent" Foreground="White" SelectionChanged="OnNoteSelected">
                             <ListBox.ItemTemplate>
                                 <DataTemplate x:DataType="data:LocalNote">
                                     <Grid ColumnDefinitions="*, Auto">
@@ -68,7 +71,10 @@
                                         <Button Grid.Column="1" Content="⋮" Background="Transparent" FontSize="18" FontWeight="Bold" Padding="10,0" VerticalAlignment="Center" Cursor="Hand">
                                             <Button.Flyout>
                                                 <MenuFlyout>
-                                                    <MenuItem Header="Delete" Click="OnDeleteNoteClick" Foreground="#f44336"/>
+                                                    <MenuItem Header="Delete"
+                                                              Command="{Binding $parent[UserControl].((vm:NotesViewModel)DataContext).DeleteNoteCommand}"
+                                                              CommandParameter="{Binding}"
+                                                              Foreground="#f44336"/>
                                                 </MenuFlyout>
                                             </Button.Flyout>
                                         </Button>

@@ -2,22 +2,31 @@ using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Data.Core;
 using Avalonia.Data.Core.Plugins;
-using System.Linq;
 using Avalonia.Markup.Xaml;
+using System;
+using System.Linq;
+using Microsoft.Extensions.DependencyInjection;
 using MarkdownNotesClient.ViewModels;
 using MarkdownNotesClient.Views;
+using MarkdownNotesClient.Services;
 
 namespace MarkdownNotesClient;
 
 public partial class App : Application
 {
+    public static IServiceProvider? Services { get; private set; }
     public override void Initialize()
     {
         AvaloniaXamlLoader.Load(this);
     }
-
     public override void OnFrameworkInitializationCompleted()
     {
+        var services = new ServiceCollection();
+        services.AddTransient<INoteService, NoteService>();
+        services.AddTransient<NotesViewModel>();
+        
+        Services = services.BuildServiceProvider();
+
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
             // Avoid duplicate validations from both Avalonia and the CommunityToolkit. 
@@ -38,7 +47,6 @@ public partial class App : Application
 
         base.OnFrameworkInitializationCompleted();
     }
-
     private void DisableAvaloniaDataAnnotationValidation()
     {
         // Get an array of plugins to remove

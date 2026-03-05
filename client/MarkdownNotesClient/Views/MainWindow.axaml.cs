@@ -21,7 +21,6 @@ public partial class MainWindow : GlassWindow
             api.SetToken(savedSession.Token);
             var notesView = new NotesView(); 
             this.Content = notesView;
-            notesView.LoadNotes();
         }
         else
         {

@@ -1,14 +1,13 @@
 using Avalonia.Controls;
 using Avalonia.Interactivity;
-using Avalonia.VisualTree;
-using Avalonia.Threading;
 using Avalonia.Input;
+using Avalonia.Threading;
+using Avalonia.VisualTree;
 using MarkdownNotesClient.Data;
-using MarkdownNotesClient.Services;
-using Microsoft.EntityFrameworkCore;
+using MarkdownNotesClient.ViewModels;
+using MarkdownNotesClient.Controls;
+using Microsoft.Extensions.DependencyInjection;
 using System;
-using System.Collections.ObjectModel;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace MarkdownNotesClient.Views;
@@ -16,19 +15,25 @@ namespace MarkdownNotesClient.Views;
 public partial class NotesView : UserControl
 {
     // ---- Fields & Properties ----
-    private ObservableCollection<LocalNote> _myNotes = new();
     private DispatcherTimer _renderTimer;
     private bool _isSettingsOpen = false;
     private bool _isNotesSidebarOpen = true;
     private bool _isSyncingOnExit = false;
 
+    private NotesViewModel? ViewModel => DataContext as NotesViewModel;
+
     // ---- Constructor & Initialization ----
     public NotesView()
     {
         InitializeComponent();
-        NotesList.ItemsSource = _myNotes;
+
+        if (App.Services != null)
+        {
+            DataContext = App.Services.GetRequiredService<NotesViewModel>();
+        }
+
         DynamicCanvas.LoadShader(ThemeManager.Theme_Dark);
-        
+
         _renderTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(400) };
         _renderTimer.Tick += (s, e) =>
         {
@@ -41,7 +46,10 @@ public partial class NotesView : UserControl
 
     private async void OnNotesViewLoaded(object? sender, RoutedEventArgs e)
     {
-        await SyncDatabaseAsync();
+        if (ViewModel != null)
+        {
+            await ViewModel.SyncDatabaseAsync();
+        }
 
         if (TopLevel.GetTopLevel(this) is Window parentWindow)
         {
@@ -49,80 +57,18 @@ public partial class NotesView : UserControl
         }
     }
 
-    // ---- Note Management (Local) ----
-    public async void LoadNotes()
+    private async void OnWindowClosing(object? sender, System.ComponentModel.CancelEventArgs e)
     {
-        using var db = new LocalDbContext();
-        var fetchedNotes = await db.Notes.Where(n => !n.IsDeleted).ToListAsync();
-
-        _myNotes.Clear();
-        foreach (var note in fetchedNotes)
+        if (!_isSyncingOnExit && ViewModel != null)
         {
-            _myNotes.Add(note);
-        }
-    }
+            e.Cancel = true;
+            _isSyncingOnExit = true;
 
-    private async void OnCreateNoteClick(object sender, RoutedEventArgs e)
-    {
-        var newNote = new LocalNote
-        {
-            Title = "Untitled Note",
-            Content = "Start typing your markdown here...",
-            LastModified = DateTime.UtcNow,
-            IsSynced = false
-        };
+            await ViewModel.SyncDatabaseAsync();
 
-        using var db = new LocalDbContext();
-        db.Notes.Add(newNote);
-        await db.SaveChangesAsync();
-
-        _myNotes.Add(newNote);
-        NotesList.SelectedItem = newNote;
-        NoteTitleField.Text = newNote.Title;
-        NoteContentField.Text = newNote.Content;
-    }
-
-    private async void OnSaveNoteClick(object sender, RoutedEventArgs e)
-    {
-        if (NotesList.SelectedItem is LocalNote selectedNote)
-        {
-            selectedNote.Title = NoteTitleField.Text ?? "Untitled";
-            selectedNote.Content = NoteContentField.Text ?? "";
-            selectedNote.LastModified = DateTime.UtcNow;
-            selectedNote.IsSynced = false;
-
-            using var db = new LocalDbContext();
-            db.Notes.Update(selectedNote);
-            await db.SaveChangesAsync();
-
-            var index = _myNotes.IndexOf(selectedNote);
-            if (index >= 0)
+            if (sender is Window window)
             {
-                _myNotes.RemoveAt(index);
-                _myNotes.Insert(index, selectedNote);
-                NotesList.SelectedItem = selectedNote;
-            }
-        }
-        await SyncDatabaseAsync();
-    }
-
-    private async void OnDeleteNoteClick(object sender, RoutedEventArgs e)
-    {
-        if (sender is MenuItem menuItem && menuItem.DataContext is LocalNote noteToDelete)
-        {
-            using var db = new LocalDbContext();
-            noteToDelete.IsDeleted = true;
-            noteToDelete.IsSynced = false;
-
-            db.Notes.Update(noteToDelete);
-            await db.SaveChangesAsync();
-
-            _myNotes.Remove(noteToDelete);
-
-            if (NotesList.SelectedItem == noteToDelete)
-            {
-                NoteTitleField.Text = "";
-                NoteContentField.Text = "";
+                window.Close();
             }
         }
     }
@@ -136,13 +82,7 @@ public partial class NotesView : UserControl
 
     private void OnNoteSelected(object sender, SelectionChangedEventArgs e)
     {
-        if (NotesList.SelectedItem is LocalNote selectedNote)
-        {
-            NoteTitleField.Text = selectedNote.Title;
-            NoteContentField.Text = selectedNote.Content;
-            NoteContentField.CaretIndex = 0;
-        }
-        
+        // Auto-close the sidebar when a note is selected on smaller screens
         if (_isNotesSidebarOpen)
         {
             _isNotesSidebarOpen = false;
@@ -156,54 +96,6 @@ public partial class NotesView : UserControl
         if (_isSettingsOpen && SettingsDrawerBorder != null)
         {
             SettingsDrawerBorder.Height = e.NewSize.Height * 0.85;
-        }
-    }
-
-    // ---- Sync & Auth Logic ----
-    private async Task SyncDatabaseAsync()
-    {
-        var api = new ApiService();
-        using var db = new LocalDbContext();
-        var session = db.Sessions.FirstOrDefault();
-        
-        if (session != null)
-        {
-            api.SetToken(session.Token);
-        }
-
-        await api.SyncWithCloudAsync();
-        LoadNotes();
-        Console.WriteLine("Cloud Sync Complete!");
-    }
-
-    private void OnLogoutClick(object sender, RoutedEventArgs e)
-    {
-        using var db = new LocalDbContext();
-        foreach (var session in db.Sessions) { db.Sessions.Remove(session); }
-        foreach (var note in db.Notes) { db.Notes.Remove(note); }
-        db.SaveChanges();
-        
-        var api = new ApiService();
-        api.SetToken("");
-        
-        if (this.GetVisualRoot() is Window window)
-        {
-            window.Content = new MainView();
-        }
-    }
-
-    private async void OnWindowClosing(object? sender, System.ComponentModel.CancelEventArgs e)
-    {
-        if (!_isSyncingOnExit)
-        {
-            e.Cancel = true;
-            _isSyncingOnExit = true;
-            await SyncDatabaseAsync();
-
-            if (sender is Window window)
-            {
-                window.Close();
-            }
         }
     }
 
@@ -261,6 +153,17 @@ public partial class NotesView : UserControl
             NotesSidebarContainer.Classes.Add("closed");
             NotesSidebarArrow.Classes.Remove("open");
             NotesSidebarArrow.Classes.Add("closed");
+        }
+    }
+
+    private void OnLogoutClick(object sender, RoutedEventArgs e)
+    {
+        var api = new MarkdownNotesClient.Services.ApiService();
+        api.SetToken("");
+
+        if (this.GetVisualRoot() is Window window)
+        {
+            window.Content = new MainView(); // Swap back to login
         }
     }
 }

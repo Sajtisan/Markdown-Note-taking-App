@@ -1,14 +1,14 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using shared.Models; 
+using MarkdownNotesClient.Data;
 
 namespace MarkdownNotesClient.Services;
 
 public interface INoteService
 {
-    Task<IEnumerable<Note>> GetLocalNotesAsync();
-    Task<Note?> GetNoteByIdAsync(int id);
-    Task SaveNoteAsync(Note note);
-    Task DeleteNoteAsync(int id);
-    Task SyncWithCloudAsync(); 
+    Task<IEnumerable<LocalNote>> GetLocalNotesAsync();
+    Task<LocalNote?> GetNoteByIdAsync(int id);
+    Task SaveNoteAsync(LocalNote note);
+    Task DeleteNoteAsync(LocalNote noteToDelete);
+    Task SyncWithCloudAsync();
 }

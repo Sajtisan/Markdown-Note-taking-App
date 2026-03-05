@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using System.Security.Claims;
+using shared.Models;
 using Markdown_Note_taking_App.Data;
 using Markdown_Note_taking_App.Models;
 using Markdig;

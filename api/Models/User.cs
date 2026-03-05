@@ -1,3 +1,5 @@
+using shared.Models;
+
 namespace Markdown_Note_taking_App.Models;
 
 public class User

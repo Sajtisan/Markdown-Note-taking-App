@@ -1,4 +1,4 @@
-namespace MarkdownNotesClient.Services;
+namespace MarkdownNotesClient.Controls;
 
 public static class ThemeManager
 {
